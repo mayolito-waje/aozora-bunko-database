@@ -9,7 +9,6 @@ public class Author
   public string? GivenNameReading { get; set; }
   public string? GivenNameSort { get; set; }
   public string? GivenNameRomaji { get; set; }
-  public string? RoleFlag { get; set; }
   public DateOnly? BirthDate { get; set; }
   public DateOnly? DeathDate { get; set; }
   public bool? PersonalityRights { get; set; }
