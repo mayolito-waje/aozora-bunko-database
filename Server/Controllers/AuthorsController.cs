@@ -4,9 +4,7 @@ using Server.Data;
 
 namespace Server.Controllers
 {
-  [Route("api/[controller]")]
-  [ApiController]
-  public class AuthorsController(AppDbContext dbContext) : ControllerBase
+  public class AuthorsController(AppDbContext dbContext) : ControllerProvider
   {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Author>>> GetAllAuthors()
