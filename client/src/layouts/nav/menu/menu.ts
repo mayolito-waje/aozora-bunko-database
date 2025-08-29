@@ -1,27 +1,25 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 
 import { Login } from "../login/login";
+import { AccountService } from '../../../core/services/account-service';
+import { NavProfileOverview } from "../nav-profile-overview/nav-profile-overview";
+import { DropdownButton } from "../../dropdown-button/dropdown-button";
 
 @Component({
-  selector: 'div[appNavMenu]',
-  imports: [Login],
+  selector: 'app-menu',
+  imports: [Login, NavProfileOverview, DropdownButton],
   templateUrl: './menu.html',
   styleUrl: './menu.css',
   host: {
-    class: "relative"
+    class: "relative flex-none"
   }
 })
 export class Menu {
-  protected showMenu = signal(false);
+  protected accountService = inject(AccountService);
   protected showLogin = signal(false);
-
-  toggleMenu() {
-    this.showMenu.update((show) => !show);
-  }
 
   openLogin() {
     this.showLogin.set(true);
-    this.showMenu.set(false);
   }
 
   closeLogin() {
