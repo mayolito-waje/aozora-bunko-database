@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { Nav } from "../layouts/nav/nav";
 import { Toast } from "../layouts/toast/toast";
 import { User } from '../types/user';
-import { AccountService } from '../core/account-service';
+import { AccountService } from '../core/services/account-service';
 
 @Component({
   selector: 'app-root',

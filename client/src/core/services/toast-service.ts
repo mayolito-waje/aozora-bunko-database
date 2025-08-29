@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
-import { AlertType, ToastContent } from '../types/toast';
+import { AlertType, ToastContent } from '../../types/toast';
 
 @Injectable({
   providedIn: 'root',
