@@ -1,19 +1,19 @@
 <div class="toast toast-start">
   @for(info of toastService.toastContent(); track info.id) {
   @if(info.type === 'success') {
-  <div class="alert alert-success">
+  <div class="alert alert-success text-white">
     <span>{{ info.message }}</span>
   </div>
   } @else if (info.type === 'info') {
-  <div class="alert alert-info">
+  <div class="alert alert-info text-white">
     <span>{{ info.message }}</span>
   </div>
   } @else if (info.type === 'warning') {
-    <div class="alert alert-warning">
+    <div class="alert alert-warning text-white">
       <span>{{ info.message }}</span>
     </div>
   } @else if (info.type === 'error') {
-    <div class="alert alert-error">
+    <div class="alert alert-error text-white">
       <span>{{ info.message }}</span>
     </div>
   }
