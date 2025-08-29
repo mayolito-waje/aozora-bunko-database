@@ -1,5 +1,5 @@
 @if(showLogin()) {
-<app-login />
+<app-login (closeLoginTemplate)="closeLogin()" />
 } @else {
 <button (click)="toggleMenu()" class="btn btn-square btn-ghost">
   <svg

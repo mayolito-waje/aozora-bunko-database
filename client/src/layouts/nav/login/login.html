@@ -1,1 +1,19 @@
-<p>login works!</p>
+<form #loginForm="ngForm" class="flex gap-3 items-center">
+  <input
+    class="input input-sm text-black placeholder-gray-500"
+    type="text"
+    name="email"
+    id="email"
+    placeholder="メールアドレス"
+    [(ngModel)]="credentials.email"
+  />
+  <input
+    class="input input-sm text-black placeholder-gray-500"
+    type="password"
+    name="password"
+    id="password"
+    placeholder="パスワード"
+    [(ngModel)]="credentials.password"
+  />
+  <button class="btn btn-sm btn-info text-white" type="submit" (click)="onLogin()">ログイン</button>
+</form>

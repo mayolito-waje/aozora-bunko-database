@@ -12,22 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+  options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        string tokenKey = builder.Configuration["JwtKey"]
-            ?? throw new Exception("JWT key not found in configuration file");
+      string tokenKey = builder.Configuration["JwtKey"]
+          ?? throw new Exception("JWT key not found in configuration file");
 
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-        };
+      options.TokenValidationParameters = new TokenValidationParameters()
+      {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+      };
     });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -40,6 +41,8 @@ var app = builder.Build();
 // {
 //     app.MapOpenApi();
 // }
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
+  .WithOrigins("http://127.0.0.1:4200", "http://localhost:4200"));
 app.UseAuthentication();
 app.UseAuthorization();
 

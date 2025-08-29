@@ -22,4 +22,8 @@ export class Menu {
     this.showLogin.set(true);
     this.showMenu.set(false);
   }
+
+  closeLogin() {
+    this.showLogin.set(false);
+  }
 }
