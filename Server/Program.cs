@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Server.Core.JSON;
 using Server.Data;
 using Server.Interfaces;
 using Server.Services;
@@ -9,7 +10,11 @@ using Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+  .AddNewtonsoftJson(options =>
+  {
+    options.SerializerSettings.ContractResolver = new ColumnNameContractResolver();
+  });
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));

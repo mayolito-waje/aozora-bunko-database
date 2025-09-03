@@ -7,21 +7,22 @@ namespace Server.Controllers
   public class AuthorsController(AppDbContext dbContext) : ControllerProvider
   {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Author>>> GetAllAuthors()
+    public async Task<ActionResult> GetAllAuthors()
     {
       var allAuthors = await dbContext.Authors.ToListAsync();
-      return allAuthors;
+
+      return Ok(allAuthors);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Author>> GetAuthorById(string id)
+    public async Task<ActionResult> GetAuthorById(string id)
     {
       var author = await dbContext.Authors.FindAsync(id);
 
       if (author == null)
         return NotFound();
 
-      return author;
+      return Ok(author);
     }
   }
 }
