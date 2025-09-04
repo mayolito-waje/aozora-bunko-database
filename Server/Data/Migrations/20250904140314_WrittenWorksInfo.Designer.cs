@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Server.Data;
 
@@ -10,9 +11,11 @@ using Server.Data;
 namespace Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250904140314_WrittenWorksInfo")]
+    partial class WrittenWorksInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
@@ -46,7 +49,7 @@ namespace Server.Data.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("名読みソート用");
 
-                    b.Property<bool>("PersonalityRights")
+                    b.Property<bool?>("PersonalityRights")
                         .HasColumnType("INTEGER")
                         .HasColumnName("人物著作権フラグ");
 

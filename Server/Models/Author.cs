@@ -1,20 +1,21 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Server.Models;
 
 public class Author
 {
   public required string Id { get; set; }
 
   [Column("姓")]
-  public string? Surname { get; set; }
+  public required string Surname { get; set; }
 
   [Column("姓読み")]
-  public string? SurnameReading { get; set; }
+  public required string SurnameReading { get; set; }
 
   [Column("姓読みソート用")]
-  public string? SurnameSort { get; set; }
+  public required string SurnameSort { get; set; }
 
   [Column("姓ローマ字")]
-  public string? SurnameRomaji { get; set; }
+  public required string SurnameRomaji { get; set; }
 
   [Column("名")]
   public string? GivenName { get; set; }
@@ -35,5 +36,7 @@ public class Author
   public DateOnly? DeathDate { get; set; }
 
   [Column("人物著作権フラグ")]
-  public bool? PersonalityRights { get; set; }
+  public bool PersonalityRights { get; set; } = false;
+
+  public ICollection<WrittenWork> WrittenWorks { get; set; } = new List<WrittenWork>();
 }
