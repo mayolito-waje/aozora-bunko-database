@@ -21,7 +21,6 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
 
   private async Task<Author> AddAuthor(Aozora data)
   {
-
     var newAuthor = new Author()
     {
       Id = data.AuthorId,
@@ -33,8 +32,8 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       GivenNameReading = data.GivenNameReading,
       GivenNameSort = data.GivenNameSort,
       GivenNameRomaji = data.GivenNameRomaji,
-      BirthDate = (data.BirthDate != null) ? DateOnly.Parse(data.BirthDate) : null,
-      DeathDate = (data.DeathDate != null) ? DateOnly.Parse(data.DeathDate) : null,
+      BirthDate = !string.IsNullOrEmpty(data.BirthDate) ? DateOnly.Parse(data.BirthDate) : null,
+      DeathDate = !string.IsNullOrEmpty(data.DeathDate) ? DateOnly.Parse(data.DeathDate) : null,
       PersonalityRights = data.PersonalityRights == "あり",
     };
 
