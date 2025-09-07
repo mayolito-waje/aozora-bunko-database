@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using Server.Models;
+
+namespace Server.Models;
 
 public class Author
 {

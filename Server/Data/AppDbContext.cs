@@ -13,4 +13,19 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
   public DbSet<Publisher> Publishers { get; set; }
 
   public DbSet<User> Users { get; set; }
+
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    modelBuilder.Entity<WrittenWork>()
+      .HasOne(x => x.Source)
+      .WithMany(y => y.WrittenWorks)
+      .HasForeignKey(x => x.SourceId)
+      .OnDelete(DeleteBehavior.Restrict);
+
+    modelBuilder.Entity<WrittenWork>()
+      .HasOne(x => x.Source2)
+      .WithMany(y => y.WrittenWorks2)
+      .HasForeignKey(x => x.Source2Id)
+      .OnDelete(DeleteBehavior.Restrict);
+  }
 }

@@ -22,5 +22,6 @@ public class Source
   public Source? OriginalSource { get; set; }
 
   public ICollection<WrittenWork> WrittenWorks { get; set; } = new List<WrittenWork>();
+  public ICollection<WrittenWork> WrittenWorks2 { get; set; } = new List<WrittenWork>();
   public ICollection<Source> Sources { get; set; } = new List<Source>();
 }
