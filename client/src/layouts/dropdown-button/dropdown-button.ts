@@ -15,4 +15,8 @@ export class DropdownButton {
   toggleMenu() {
     this.showMenu.update((show) => !show);
   }
+
+  closeMenu() {
+    this.showMenu.set(false);
+  }
 }

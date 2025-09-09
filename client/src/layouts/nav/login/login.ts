@@ -28,4 +28,8 @@ export class Login {
       error: (error: Error) => this.toastService.update(error.message, 'error'),
     });
   }
+
+  onCloseLogin() {
+    this.closeLoginTemplate.emit();
+  }
 }

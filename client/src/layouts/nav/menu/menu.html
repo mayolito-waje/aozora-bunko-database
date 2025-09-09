@@ -3,8 +3,8 @@
 } @else if(!accountService.currentUser() && showLogin()) {
 <app-login (closeLoginTemplate)="closeLogin()" />
 } @else {
-<app-dropdown-button>
+<app-dropdown-button #dropdown >
   <li (click)="openLogin()"><a>ログイン</a></li>
-  <li><a>レジスター</a></li>
+  <li (click)="onCloseMenu()" routerLink="/register"><a>レジスター</a></li>
 </app-dropdown-button>
 }

@@ -11,7 +11,7 @@
       "schematics": {
         "@schematics/angular:component": {
           "skipTests": true,
-          "path": "src/layouts"
+          "path": "src"
         },
         "@schematics/angular:service": {
           "skipTests": true,
