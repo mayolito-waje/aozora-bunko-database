@@ -4,9 +4,10 @@ import { catchError, tap, throwError } from 'rxjs';
 
 import type { User, UserLogin } from '../../types/user';
 import { ToastService } from './toast-service';
+import { UserRegister } from '../../types/user-register';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
   private http = inject(HttpClient);
@@ -22,16 +23,23 @@ export class AccountService {
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
         }
-      }),
-      catchError((error: HttpErrorResponse) => {
-        console.log(error);
-
-        if (error.status === 401)
-          return throwError(() => new Error('メールアドレスまたはパスワードが間違ってます'));
-
-        return throwError(() => new Error('エラーが発生しました'));
       })
     );
+  }
+
+  register(credentials: UserRegister) {
+    return this.http
+      .post<User>(this.baseUrl, {
+        email: credentials.email,
+        username: credentials.username,
+        password: credentials.password,
+      })
+      .pipe(
+        tap((user) => {
+          localStorage.setItem('user', JSON.stringify(user));
+          if (user) this.currentUser.set(user);
+        })
+      );
   }
 
   logout() {

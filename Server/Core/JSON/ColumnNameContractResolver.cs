@@ -6,7 +6,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace Server.Core.JSON;
 
-public class ColumnNameContractResolver : DefaultContractResolver
+public class ColumnNameContractResolver : CamelCasePropertyNamesContractResolver
 {
   protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
   {

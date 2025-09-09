@@ -19,7 +19,7 @@ namespace Server.Controllers
         public async Task<ActionResult<UserDto>> RegisterUser(UserRegisterDto userRegisterDto)
         {
             bool userExists = await dbContext.Users.AnyAsync(x => x.Email == userRegisterDto.Email);
-            if (userExists) return Unauthorized("Email address already exists");
+            if (userExists) return Unauthorized("メールアドレスがもう誰か使ってます");
 
             using var hmac = new HMACSHA512();
 
@@ -43,7 +43,7 @@ namespace Server.Controllers
         public async Task<ActionResult<UserDto>> LoginUser(UserLoginDto userLoginDto)
         {
             User? user = await dbContext.Users.SingleOrDefaultAsync(x => x.Email == userLoginDto.Email);
-            if (user == null) return Unauthorized("User does not exist");
+            if (user == null) return Unauthorized("ユーザーが見つかりません");
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
             byte[] computedPassword = hmac.ComputeHash(Encoding.UTF8.GetBytes(userLoginDto.Password));
@@ -51,7 +51,7 @@ namespace Server.Controllers
             for (int i = 0; i < computedPassword.Length; i++)
             {
                 if (user.PasswordHash[i] != computedPassword[i])
-                    return Unauthorized("Password does not match");
+                    return Unauthorized("パスワードが間違ってます");
             }
 
             return user.GenerateToken(tokenService);
