@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import type { UserRegister } from '../../types/user-register';
 import { AccountService } from '../../core/services/account-service';
 import { ToastService } from '../../core/services/toast-service';
+import { AuthWrapper } from "../misc/auth-wrapper/auth-wrapper";
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [FormsModule, AuthWrapper],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -24,18 +25,16 @@ export class Register {
     confirmPassword: '',
   });
 
-  async registerUser() {
+  registerUser() {
     if (this.credentials().password !== this.credentials().confirmPassword) {
       this.toastService.update('パスワードが合ってません', 'error');
       return;
     }
 
     this.accountService.register(this.credentials()).subscribe({
-      next: (response) => {
-        this.toastService.update('新しいアカウントを作りました', 'success');
-        console.log(response);
-
+      next: () => {
         this.router.navigateByUrl('/');
+        this.toastService.update('新しいアカウントを作りました', 'success');
       },
       error: (error: Error) => this.toastService.update(error.message, 'error'),
     });

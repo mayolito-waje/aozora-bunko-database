@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { UserLogin } from '../../../types/user';
 import { ToastService } from '../../../core/services/toast-service';
 import { AccountService } from '../../../core/services/account-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,15 +15,16 @@ import { AccountService } from '../../../core/services/account-service';
 export class Login {
   protected toastService = inject(ToastService);
   private accountService = inject(AccountService);
+  private router = inject(Router);
 
   protected credentials: UserLogin = { email: '', password: '' };
   protected closeLoginTemplate = output<void>();
 
   onLogin() {
     this.accountService.login(this.credentials).subscribe({
-      next: (response) => {
+      next: () => {
+        this.router.navigateByUrl('/');
         this.toastService.update('ログインしました', 'success');
-        console.log(response);
         this.closeLoginTemplate.emit();
       },
       error: (error: Error) => this.toastService.update(error.message, 'error'),

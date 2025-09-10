@@ -1,0 +1,11 @@
+<div class="card bg-base-100 shadow-sm w-fit mx-auto mt-36 flex flex-col gap-3 p-3">
+  <h2 class="text-2xl font-bold text-blue-400 text-center">{{ label() }}</h2>
+  <form
+    #registerForm="ngForm"
+    class="flex flex-col items-center justify-between gap-1.5"
+    (submit)="handleSubmit()"
+  >
+    <ng-content select="fieldset, input"></ng-content>
+    <button class="btn btn-soft btn-info hover:text-white" type="submit">{{ label() }}</button>
+  </form>
+</div>
