@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { AuthWrapper } from "../misc/auth-wrapper/auth-wrapper";
 import { UserLogin } from '../../types/user';
 import { AccountService } from '../../core/services/account-service';
 import { ToastService } from '../../core/services/toast-service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',

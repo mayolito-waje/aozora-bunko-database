@@ -1,10 +1,10 @@
 import { Component, inject, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { UserLogin } from '../../../types/user';
 import { ToastService } from '../../../core/services/toast-service';
 import { AccountService } from '../../../core/services/account-service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',

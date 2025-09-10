@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { Home } from '../features/home/home';
 import { Register } from '../features/register/register';
 import { LoginPage } from '../features/login-page/login-page';
