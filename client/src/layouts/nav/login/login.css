@@ -1,9 +1,0 @@
-a {
-  writing-mode: horizontal-tb;
-}
-
-@media (max-width: 674px) {
-  :host {
-    display: none;
-  }
-}
