@@ -14,6 +14,7 @@ builder.Services.AddControllers()
   .AddNewtonsoftJson(options =>
   {
     options.SerializerSettings.ContractResolver = new ColumnNameContractResolver();
+    // options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
   });
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
