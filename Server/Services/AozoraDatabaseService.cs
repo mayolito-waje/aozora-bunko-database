@@ -80,7 +80,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
     await UseDbContext(async dbContext =>
     {
       Publisher? originalSourcePublisher = null;
-      if (data.OriginalSourcePublisher != null)
+      if (!string.IsNullOrEmpty(data.OriginalSourcePublisher))
       {
         originalSourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
           x => x.Name == data.OriginalSourcePublisher
@@ -89,7 +89,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       }
 
       Source? originalSource = null;
-      if (data.OriginalSource != null)
+      if (!string.IsNullOrEmpty(data.OriginalSource))
       {
         if (originalSourcePublisher != null)
           originalSource = await dbContext.Sources.SingleOrDefaultAsync(
@@ -104,7 +104,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       }
 
       Publisher? sourcePublisher = null;
-      if (data.SourcePublisher != null)
+      if (!string.IsNullOrEmpty(data.SourcePublisher))
       {
         sourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
           x => x.Name == data.SourcePublisher
@@ -112,7 +112,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
         sourcePublisher ??= await AddPublisher(data.SourcePublisher);
       }
 
-      if (data.Source != null)
+      if (!string.IsNullOrEmpty(data.Source))
       {
         if (sourcePublisher != null)
           source = await dbContext.Sources.SingleOrDefaultAsync(

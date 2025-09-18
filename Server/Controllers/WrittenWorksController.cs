@@ -12,7 +12,6 @@ namespace Server.Controllers
     [HttpGet]
     public async Task<IActionResult> RetrieveWorks([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      Console.WriteLine(search);
       var works = await dbContext.WrittenWorks
                     .Where(w =>
                               (authorId == null || w.AuthorId == authorId) &&
