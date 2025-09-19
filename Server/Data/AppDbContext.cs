@@ -12,8 +12,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
   public DbSet<Source> Sources { get; set; }
   public DbSet<Publisher> Publishers { get; set; }
 
-  public DbSet<User> Users { get; set; }
-
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     modelBuilder.Entity<WrittenWork>()
