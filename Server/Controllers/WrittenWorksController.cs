@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Extensions;
-using Server.Models;
 using X.PagedList.Extensions;
 
 namespace Server.Controllers
@@ -13,27 +12,22 @@ namespace Server.Controllers
     public async Task<IActionResult> RetrieveWorks([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
       var works = await dbContext.WrittenWorks
-                    .Where(w =>
-                              (authorId == null || w.AuthorId == authorId) &&
-                              (w.Title.ToLower().Contains(search == null ? "" : search.ToLower()) ||
-                              w.TitleReading.ToLower().Contains(search == null ? "" : search.ToLower()) ||
-                              w.TitleSort.ToLower().Contains(search == null ? "" : search.ToLower())))
-                    .OrderBy(w => w.TitleSort)
-                    .ThenBy(w => w.TitleReading)
-                    .ThenBy(w => w.Title)
-                    .Include(w => w.Author)
-                    .Include(w => w.WritingStyle)
-                    .Include(w => w.WriterRole)
-                    .Include(w => w.Source)
-                    .Include(w => w.Source.Publisher)
-                    .Include(w => w.Source.OriginalSource)
-                    .Include(w => w.Source.OriginalSource.Publisher)
-                    .Include(w => w.Source2)
-                    .Include(w => w.Source2.Publisher)
-                    .Include(w => w.Source2.OriginalSource)
-                    .Include(w => w.Source2.OriginalSource.Publisher)
-                    .Select(w => w.ToDto())
-                    .ToListAsync();
+          .Where(w =>
+              (authorId == null || w.AuthorId == authorId) &&
+              (string.IsNullOrEmpty(search) ||
+                EF.Functions.Like(w.Title, $"%{search}%") ||
+                EF.Functions.Like(w.TitleReading, $"%{search}%") ||
+                EF.Functions.Like(w.TitleSort, $"%{search}%")))
+          .OrderBy(w => w.TitleSort)
+          .ThenBy(w => w.TitleReading)
+          .ThenBy(w => w.Title)
+          .Include(w => w.Author)
+          .Include(w => w.WritingStyle)
+          .Include(w => w.WriterRole)
+          .IncludeSourceAndPublishers(w => w.Source)
+          .IncludeSourceAndPublishers(w => w.Source2)
+          .Select(w => w.ToDto())
+          .ToListAsync();
 
       return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
     }
