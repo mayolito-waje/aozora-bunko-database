@@ -19,6 +19,69 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
     await action(dbContext);
   }
 
+  public async Task PopulateAozoraDatabase()
+  {
+    using var reader = new StreamReader("aozora.csv");
+    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+    csv.Context.RegisterClassMap<AozoraMap>();
+    foreach (var record in csv.GetRecords<Aozora>())
+      if (await AddRow(record))
+        Console.WriteLine($"Added new row with 作品ID {record.WrittenWorkId}.");
+      else
+        Console.WriteLine($"Row with 作品ID {record.WrittenWorkId} already exists");
+  }
+
+  private async Task<bool> AddRow(Aozora data)
+  {
+    bool returnValue = false;
+
+    await UseDbContext(async dbContext =>
+    {
+      var author = await dbContext.Authors.FindAsync(data.AuthorId);
+      author ??= await AddAuthor(data);
+
+      string? source1 = await HandleSource(new AozoraSourceExtended()
+      {
+        Source = data.Source,
+        SourcePublisher = data.SourcePublisher,
+        SourcePublishDate = data.SourcePublishDate,
+        OriginalSource = data.OriginalSource,
+        OriginalSourcePublisher = data.OriginalSourcePublisher,
+        OriginalSourcePublishDate = data.OriginalSourcePublishDate,
+      });
+
+      string? source2 = await HandleSource(new AozoraSourceExtended()
+      {
+        Source = data.Source2,
+        SourcePublisher = data.SourcePublisher2,
+        SourcePublishDate = data.SourcePublishDate2,
+        OriginalSource = data.OriginalSource2,
+        OriginalSourcePublisher = data.OriginalSourcePublisher2,
+        OriginalSourcePublishDate = data.OriginalSourcePublishDate2,
+      });
+
+      var writerRole = await dbContext.WriterRoles.FindAsync(data.WriterRole);
+      writerRole ??= await AddWriterRole(data.WriterRole);
+
+      var writingStyle = await dbContext.WritingStyles.FindAsync(data.WritingStyle);
+      writingStyle ??= await AddWritingStyle(data.WritingStyle);
+
+      var writtenWork = await dbContext.WrittenWorks.FindAsync(data.WrittenWorkId);
+      if (writtenWork != null)
+      {
+        returnValue = false;
+      }
+      else
+      {
+        await AddWrittenWork(data, author, source1, source2, writerRole, writingStyle);
+        returnValue = true;
+      }
+    });
+
+    return returnValue;
+  }
+
   private async Task<Author> AddAuthor(Aozora data)
   {
     var newAuthor = new Author()
@@ -186,67 +249,5 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       dbContext.WrittenWorks.Add(newWrittenWork);
       await dbContext.SaveChangesAsync();
     });
-  }
-
-  private async Task<bool> AddRow(Aozora data)
-  {
-    bool returnValue = false;
-
-    await UseDbContext(async dbContext =>
-    {
-      var author = await dbContext.Authors.FindAsync(data.AuthorId);
-      author ??= await AddAuthor(data);
-
-      string? source1 = await HandleSource(new AozoraSourceExtended()
-      {
-        Source = data.Source,
-        SourcePublisher = data.SourcePublisher,
-        SourcePublishDate = data.SourcePublishDate,
-        OriginalSource = data.OriginalSource,
-        OriginalSourcePublisher = data.OriginalSourcePublisher,
-        OriginalSourcePublishDate = data.OriginalSourcePublishDate,
-      });
-
-      string? source2 = await HandleSource(new AozoraSourceExtended()
-      {
-        Source = data.Source2,
-        SourcePublisher = data.SourcePublisher2,
-        SourcePublishDate = data.SourcePublishDate2,
-        OriginalSource = data.OriginalSource2,
-        OriginalSourcePublisher = data.OriginalSourcePublisher2,
-        OriginalSourcePublishDate = data.OriginalSourcePublishDate2,
-      });
-
-      var writerRole = await dbContext.WriterRoles.FindAsync(data.WriterRole);
-      writerRole ??= await AddWriterRole(data.WriterRole);
-
-      var writingStyle = await dbContext.WritingStyles.FindAsync(data.WritingStyle);
-      writingStyle ??= await AddWritingStyle(data.WritingStyle);
-
-      var writtenWork = await dbContext.WrittenWorks.FindAsync(data.WrittenWorkId);
-      if (writtenWork != null)
-      {
-        returnValue = false;
-      }
-      else
-      {
-        await AddWrittenWork(data, author, source1, source2, writerRole, writingStyle);
-        returnValue = true;
-      }
-    });
-
-    return returnValue;
-  }
-  public async Task PopulateAozoraDatabase()
-  {
-    using var reader = new StreamReader("aozora.csv");
-    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-
-    csv.Context.RegisterClassMap<AozoraMap>();
-    foreach (var record in csv.GetRecords<Aozora>())
-      if (await AddRow(record))
-        Console.WriteLine($"Added new row with 作品ID {record.WrittenWorkId}.");
-      else
-        Console.WriteLine($"Row with 作品ID {record.WrittenWorkId} already exists");
   }
 }
