@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Extensions;
+using Server.Models;
 using X.PagedList.Extensions;
 
 namespace Server.Controllers
@@ -12,20 +13,60 @@ namespace Server.Controllers
     public async Task<IActionResult> RetrieveWorks([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
       var works = await dbContext.WrittenWorks
-          .Where(w =>
-              (authorId == null || w.AuthorId == authorId) &&
-              (string.IsNullOrEmpty(search) ||
-                EF.Functions.Like(w.Title, $"%{search}%") ||
-                EF.Functions.Like(w.TitleReading, $"%{search}%") ||
-                EF.Functions.Like(w.TitleSort, $"%{search}%")))
-          .OrderBy(w => w.TitleSort)
-          .ThenBy(w => w.TitleReading)
-          .ThenBy(w => w.Title)
-          .Include(w => w.Author)
-          .Include(w => w.WritingStyle)
-          .Include(w => w.WriterRole)
-          .IncludeSourceAndPublishers(w => w.Source)
-          .IncludeSourceAndPublishers(w => w.Source2)
+          .IsMatchingSearchAndAuthor(search, authorId)
+          .SortAndIncludeDetails()
+          .Select(w => w.ToDto())
+          .ToListAsync();
+
+      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+    }
+
+    [HttpGet("shinji_shinkana")]
+    public async Task<IActionResult> ShinjiShinkanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
+    {
+      var works = await dbContext.WrittenWorks
+          .IsMatchingSearchAndAuthor(search, authorId)
+          .Where(w => w.WritingStyle!.Style == "新字新仮名")
+          .SortAndIncludeDetails()
+          .Select(w => w.ToDto())
+          .ToListAsync();
+
+      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+    }
+
+    [HttpGet("kyuuji_kyuukana")]
+    public async Task<IActionResult> KyuujiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
+    {
+      var works = await dbContext.WrittenWorks
+          .IsMatchingSearchAndAuthor(search, authorId)
+          .Where(w => w.WritingStyle!.Style == "旧字旧仮名")
+          .SortAndIncludeDetails()
+          .Select(w => w.ToDto())
+          .ToListAsync();
+
+      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+    }
+
+    [HttpGet("shinji_kyuukana")]
+    public async Task<IActionResult> ShinjiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
+    {
+      var works = await dbContext.WrittenWorks
+          .IsMatchingSearchAndAuthor(search, authorId)
+          .Where(w => w.WritingStyle!.Style == "新字旧仮名")
+          .SortAndIncludeDetails()
+          .Select(w => w.ToDto())
+          .ToListAsync();
+
+      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+    }
+
+    [HttpGet("non_kana")]
+    public async Task<IActionResult> NonKanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
+    {
+      var works = await dbContext.WrittenWorks
+          .IsMatchingSearchAndAuthor(search, authorId)
+          .Where(w => w.WritingStyle!.Style == "その他")
+          .SortAndIncludeDetails()
           .Select(w => w.ToDto())
           .ToListAsync();
 
