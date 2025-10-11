@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Data;
 using Server.Extensions;
-using Server.Models;
 using X.PagedList.Extensions;
 
 namespace Server.Controllers
