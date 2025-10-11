@@ -23,4 +23,14 @@ public static class SourceExtensions
       OriginalSourcePublishDateInfo = source.OriginalSource?.PublishDateInfo,
     };
   }
+
+  public static SourceNameAndPublishDateDto NameAndPublishDateDto(this Source source)
+  {
+    return new SourceNameAndPublishDateDto()
+    {
+      Id = source.Id,
+      Name = source.Name,
+      PublishDateInfo = source.PublishDateInfo,
+    };
+  }
 }
