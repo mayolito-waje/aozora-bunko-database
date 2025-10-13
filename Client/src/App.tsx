@@ -1,7 +1,13 @@
-// import { useState } from 'react'
+import Nav from "./components/nav/nav";
+import SearchInput from "./components/search-input/search-input";
 
 function App() {
-  return <>Aozora Bunko</>;
+  return (
+    <>
+      <Nav />
+      <SearchInput />
+    </>
+  );
 }
 
 export default App;
