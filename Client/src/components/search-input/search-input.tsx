@@ -1,25 +1,13 @@
-import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { type AxiosResponse } from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useAozoraApi } from "../../hooks/use-aozora-api";
 
-import { aozoraApi } from "../../utils/environment-variables";
+import useSearchQueryContext from "../../hooks/use-search-query-context";
+
 export default function SearchInput() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const { searchQuery, setSearchQuery } = useSearchQueryContext();
 
-  const queryClient = useQueryClient();
-
-  const retrieveWorks = useQuery({
-    queryKey: ["fetch-works"],
-    queryFn: async () => {
-      const response = await axios.get<string, AxiosResponse<[]>>(
-        aozoraApi + `writtenWorks/?s=${searchQuery}&pageSize=25`
-      );
-
-      return response.data;
-    },
-  });
+  const api = useAozoraApi();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -28,8 +16,9 @@ export default function SearchInput() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    await queryClient.refetchQueries({ queryKey: ["fetch-works"] });
-    console.log(retrieveWorks.data);
+    const retrievedWorks = api.fetchWrittenWorks();
+
+    console.log(retrievedWorks.data);
   };
 
   return (
