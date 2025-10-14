@@ -1,24 +1,20 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useAozoraApi } from "../../hooks/use-aozora-api";
 
+import { useState } from "react";
 import useSearchQueryContext from "../../hooks/use-search-query-context";
 
 export default function SearchInput() {
-  const { searchQuery, setSearchQuery } = useSearchQueryContext();
-
-  const api = useAozoraApi();
+  const [inputValue, setInputValue] = useState("");
+  const { setSearchQuery } = useSearchQueryContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    setInputValue(event.target.value);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const retrievedWorks = api.fetchWrittenWorks();
-
-    console.log(retrievedWorks.data);
+    setSearchQuery(inputValue);
   };
 
   return (
@@ -31,7 +27,7 @@ export default function SearchInput() {
           <input
             className="py-1.5 pl-7 pr-1.5 border-gray-300 border-2 rounded-xl"
             type="search"
-            value={searchQuery}
+            value={inputValue}
             onChange={handleChange}
             aria-label="検索"
           />

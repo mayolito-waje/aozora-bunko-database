@@ -1,5 +1,8 @@
 @import url(./src/normalize.css);
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+}
 
 body {
   font-family: "Shippori Mincho", serif;

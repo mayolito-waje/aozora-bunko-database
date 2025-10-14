@@ -1,0 +1,33 @@
+import type { WrittenWorks } from "../../interfaces/aozora.type";
+
+interface Props {
+  works: WrittenWorks[];
+}
+
+export default function WrittenWorksList({ works }: Props) {
+  return (
+    <div
+      id="written-works-list"
+      className="grid grid-cols-[repeat(auto-fit,_minmax(400px,_1fr))] mx-auto mt-5 w-5/6 gap-2"
+    >
+      {works.map((work) => {
+        return (
+          <div key={work.id} className="card bg-base-100 shadow-sm">
+            <div className="card-body">
+              <h2 className="card-title">{work.title}</h2>
+              <p>
+                {work.author.surname}
+                {work.author.givenName}
+              </p>
+            </div>
+            <div className="card-actions justify-end relative bottom-3 right-3">
+              <button className="btn text-white bg-blue-600 hover:opacity-80">
+                作品の詳細
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
