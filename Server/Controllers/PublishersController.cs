@@ -1,7 +1,5 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Server.Data;
 using Server.DTOs;
 using Server.Extensions;
@@ -36,11 +34,11 @@ namespace Server.Controllers
 
       var sourcesList = sources.ToPagedList(sourcePage ?? 1, sourcePageSize ?? 25);
 
-      return Ok(new Dictionary<string, object>
+      return Ok(new
       {
-        ["Id"] = publisher.Id,
-        ["出版社名"] = publisher.Name,
-        ["底本リスト"] = sourcesList
+        publisher.Id,
+        publisher.Name,
+        sources = sourcesList
       });
     }
   }

@@ -1,5 +1,3 @@
-using System;
-using Server.Data;
 using Server.DTOs.WrittenWorks;
 using Server.Models;
 
@@ -26,7 +24,7 @@ public static class WrittenWorkExtensions
       Source = work.Source?.OverviewDto(),
       Source2 = work.Source2?.OverviewDto(),
       TextLink = work.TextLink,
-      XHTMLLink = work.XHTMLLink,
+      HTMLLink = work.HTMLLink,
     };
   }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace Server.Core.Aozora;
 
 public class Aozora
@@ -40,5 +38,5 @@ public class Aozora
   public string? OriginalSourcePublisher2 { get; set; }
   public string? OriginalSourcePublishDate2 { get; set; }
   public required string TextLink { get; set; }
-  public required string XHTMLLink { get; set; }
+  public required string HTMLLink { get; set; }
 }

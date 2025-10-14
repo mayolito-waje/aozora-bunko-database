@@ -11,8 +11,8 @@ using Server.Data;
 namespace Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250904140314_WrittenWorksInfo")]
-    partial class WrittenWorksInfo
+    [Migration("20251014133139_AddTables")]
+    partial class AddTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,58 +20,47 @@ namespace Server.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Server.Models.Author", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly?>("BirthDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("生年月日");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateOnly?>("DeathDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("没年月日");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GivenName")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("名");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GivenNameReading")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("名読み");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GivenNameRomaji")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("名ローマ字");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("GivenNameSort")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("名読みソート用");
+                        .HasColumnType("TEXT");
 
-                    b.Property<bool?>("PersonalityRights")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("人物著作権フラグ");
+                    b.Property<bool>("PersonalityRights")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("姓");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SurnameReading")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("姓読み");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SurnameRomaji")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("姓ローマ字");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SurnameSort")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("姓読みソート用");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -85,8 +74,7 @@ namespace Server.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("出版社名");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -100,20 +88,16 @@ namespace Server.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("底本名");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OriginalSourceId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("底本の親元ID");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PublishDateInfo")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("底本出版社発行年");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PublisherId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("底本出版社ID");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -124,40 +108,10 @@ namespace Server.Data.Migrations
                     b.ToTable("Sources");
                 });
 
-            modelBuilder.Entity("Server.Models.User", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
-
-                    b.Property<string>("ProfilePictureUrl")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("Server.Models.WriterRole", b =>
                 {
                     b.Property<string>("Role")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("役割フラグ");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Role");
 
@@ -167,8 +121,7 @@ namespace Server.Data.Migrations
             modelBuilder.Entity("Server.Models.WritingStyle", b =>
                 {
                     b.Property<string>("Style")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("文字使い種別");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Style");
 
@@ -182,71 +135,62 @@ namespace Server.Data.Migrations
 
                     b.Property<string>("AuthorId")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("人物ID");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HTMLLink")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OriginalTitle")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("原題");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ReleaseInfo")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("初出");
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source2Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SourceId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("底本ID");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Subtitle")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("副題");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SubtitleReading")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("副題読み");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TextLink")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("テキストファイルURL");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("作品名");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TitleReading")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("作品名読み");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TitleSort")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("ソート用読み");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("WorkCopyright")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("作品著作権フラグ");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("WriterRoleId")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("役割フラグID");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("WritingStyleId")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("文字使い種別ID");
-
-                    b.Property<string>("XHTMLLink")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("XHTML/HTMLファイルURL");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("Source2Id");
 
                     b.HasIndex("SourceId");
 
@@ -274,15 +218,21 @@ namespace Server.Data.Migrations
 
             modelBuilder.Entity("Server.Models.WrittenWork", b =>
                 {
-                    b.HasOne("Author", "Author")
+                    b.HasOne("Server.Models.Author", "Author")
                         .WithMany("WrittenWorks")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Server.Models.Source", "Source2")
+                        .WithMany("WrittenWorks2")
+                        .HasForeignKey("Source2Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Server.Models.Source", "Source")
                         .WithMany("WrittenWorks")
-                        .HasForeignKey("SourceId");
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Server.Models.WriterRole", "WriterRole")
                         .WithMany("WrittenWorks")
@@ -300,12 +250,14 @@ namespace Server.Data.Migrations
 
                     b.Navigation("Source");
 
+                    b.Navigation("Source2");
+
                     b.Navigation("WriterRole");
 
                     b.Navigation("WritingStyle");
                 });
 
-            modelBuilder.Entity("Author", b =>
+            modelBuilder.Entity("Server.Models.Author", b =>
                 {
                     b.Navigation("WrittenWorks");
                 });
@@ -320,6 +272,8 @@ namespace Server.Data.Migrations
                     b.Navigation("Sources");
 
                     b.Navigation("WrittenWorks");
+
+                    b.Navigation("WrittenWorks2");
                 });
 
             modelBuilder.Entity("Server.Models.WriterRole", b =>

@@ -1,5 +1,3 @@
-using System;
-
 namespace Server.Core.Aozora;
 
 public class AozoraSourceExtended

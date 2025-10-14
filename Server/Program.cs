@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Core.JSON;
 using Server.Data;
 using Server.Interfaces;
 using Server.Services;
@@ -12,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
   .AddNewtonsoftJson(options =>
   {
-    options.SerializerSettings.ContractResolver = new ColumnNameContractResolver();
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
   });
 builder.Services.AddDbContext<AppDbContext>(options =>

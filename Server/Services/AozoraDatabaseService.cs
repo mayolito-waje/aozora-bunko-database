@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using CsvHelper;
 using Microsoft.EntityFrameworkCore;
@@ -27,9 +26,9 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
     csv.Context.RegisterClassMap<AozoraMap>();
     foreach (var record in csv.GetRecords<Aozora>())
       if (await AddRow(record))
-        Console.WriteLine($"Added new row with 作品ID {record.WrittenWorkId}.");
+        Console.WriteLine($"Added new row with ID {record.WrittenWorkId}.");
       else
-        Console.WriteLine($"Row with 作品ID {record.WrittenWorkId} already exists");
+        Console.WriteLine($"Row with ID {record.WrittenWorkId} already exists");
   }
 
   private async Task<bool> AddRow(Aozora data)
@@ -241,7 +240,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       SourceId = source1Id,
       Source2Id = source2Id,
       TextLink = data?.TextLink ?? string.Empty,
-      XHTMLLink = data?.XHTMLLink ?? string.Empty,
+      HTMLLink = data?.HTMLLink ?? string.Empty,
     };
 
     await UseDbContext(async dbContext =>

@@ -1,4 +1,3 @@
-using System;
 using CsvHelper.Configuration;
 
 namespace Server.Core.Aozora;
@@ -43,6 +42,6 @@ public class AozoraMap : ClassMap<Aozora>
     Map(m => m.OriginalSourcePublisher2).Name("底本の親本出版社名2");
     Map(m => m.OriginalSourcePublishDate2).Name("底本の親本初版発行年2");
     Map(m => m.TextLink).Name("テキストファイルURL");
-    Map(m => m.XHTMLLink).Name("XHTML/HTMLファイルURL");
+    Map(m => m.HTMLLink).Name("XHTML/HTMLファイルURL");
   }
 }
