@@ -8,10 +8,11 @@ import useSearchQueryContext from "./use-search-query-context";
 
 export function useAozoraApi() {
   const { searchQuery } = useSearchQueryContext();
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(30);
 
-  const retrieveWorks = useQuery({
+  const fetchWrittenWorks = useQuery({
     queryKey: ["fetch-works", searchQuery, page, pageSize],
     queryFn: async () => {
       const response = await axios.get<string, AxiosResponse<WrittenWorks[]>>(
@@ -26,12 +27,9 @@ export function useAozoraApi() {
     enabled: searchQuery.length > 0,
   });
 
-  const fetchWrittenWorks = (page: number = 1, pageSize: number = 30) => {
-    setPage(page);
-    setPageSize(pageSize);
-
-    return retrieveWorks;
+  return {
+    setPage,
+    setPageSize,
+    fetchWrittenWorks,
   };
-
-  return { fetchWrittenWorks };
 }

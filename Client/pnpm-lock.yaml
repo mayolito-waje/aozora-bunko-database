@@ -29,6 +29,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^5.90.2
         version: 5.90.2(@tanstack/react-query@5.90.3(react@19.2.0))(react@19.2.0)
+      '@tanstack/router':
+        specifier: 0.0.1-beta.53
+        version: 0.0.1-beta.53
       axios:
         specifier: ^1.12.2
         version: 1.12.2
@@ -157,6 +160,10 @@ packages:
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
+
+  '@babel/runtime@7.28.4':
+    resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
     resolution: {integrity: sha512-LPDZ85aEJyYSd18/DkjNh4/y1ntkE5KwUHWTiqgRxruuZL2F1yuHligVHLvcHY2vMHXttKFpJn6LwfI7cw7ODw==}
@@ -494,6 +501,14 @@ packages:
     resolution: {integrity: sha512-i/LRL6DtuhG6bjGzavIMIVuKKPWx2AnEBIsBfuMm3YoHne0a20nWmsatOCBcVSaT0/8/5YFjNkebHAPLVUSi0Q==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@tanstack/router@0.0.1-beta.53':
+    resolution: {integrity: sha512-nX1avh939ufOCoXhJ5wihX/ft6sn50ARrj4FAhRYn50KKzo9fXsYSmPyVgqVdW0hJ4n9XXKIMkwwpzEhLQmqrA==}
+    engines: {node: '>=12'}
+
+  '@tanstack/store@0.0.1-beta.52':
+    resolution: {integrity: sha512-3/5XqeG09sCJnakHpq8qgXjdVpm97aITbi1wfbjLGXdVsss62zpJAvc4vL8ccHf+J/OmoS4dJTNuEZ0alywZtg==}
+    engines: {node: '>=12'}
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -925,6 +940,9 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
+  immer@9.0.21:
+    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
+
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
     engines: {node: '>=6'}
@@ -1346,6 +1364,9 @@ packages:
     resolution: {integrity: sha512-nlGpxf+hv0v7GkWBK2V9spgactGOp0qvfWRxUMjqHyzrt3SgwE48DIv/FhqPHJYLHpgW1opq3nERbz5Anq7n1g==}
     engines: {node: '>=18'}
 
+  tiny-invariant@1.3.3:
+    resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
+
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
@@ -1501,6 +1522,8 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
+
+  '@babel/runtime@7.28.4': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -1800,6 +1823,16 @@ snapshots:
     dependencies:
       '@tanstack/query-core': 5.90.3
       react: 19.2.0
+
+  '@tanstack/router@0.0.1-beta.53':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@tanstack/store': 0.0.1-beta.52
+      tiny-invariant: 1.3.3
+
+  '@tanstack/store@0.0.1-beta.52':
+    dependencies:
+      immer: 9.0.21
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -2274,6 +2307,8 @@ snapshots:
 
   ignore@7.0.5: {}
 
+  immer@9.0.21: {}
+
   import-fresh@3.3.1:
     dependencies:
       parent-module: 1.0.1
@@ -2591,6 +2626,8 @@ snapshots:
       minipass: 7.1.2
       minizlib: 3.1.0
       yallist: 5.0.0
+
+  tiny-invariant@1.3.3: {}
 
   tinyglobby@0.2.15:
     dependencies:
