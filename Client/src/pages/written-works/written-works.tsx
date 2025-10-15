@@ -1,11 +1,12 @@
 import WrittenWorksList from "../../components/written-works-list/written-works-list";
-import { useAozoraApi } from "../../hooks/use-aozora-api";
+import { useFetchWrittenWorks } from "../../hooks/use-aozora-api";
 import type { WrittenWorks } from "../../interfaces/aozora.type";
 import Loading from "../../components/loading/loading";
+import useSearchQueryContext from "../../hooks/use-search-query-context";
 
 export default function WrittenWorks() {
-  const { fetchWrittenWorks } = useAozoraApi();
-  const { data, isPending } = fetchWrittenWorks;
+  const { searchQuery } = useSearchQueryContext();
+  const { data, isPending } = useFetchWrittenWorks({ query: searchQuery });
 
   if (isPending)
     return (

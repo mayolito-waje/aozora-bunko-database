@@ -1,35 +1,32 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios, { type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../utils/environment-variables";
 import type { WrittenWorks } from "../interfaces/aozora.type";
-import useSearchQueryContext from "./use-search-query-context";
 
-export function useAozoraApi() {
-  const { searchQuery } = useSearchQueryContext();
+interface GenericQuery {
+  query: string;
+  page?: number;
+  pageSize?: number;
+}
 
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(30);
-
-  const fetchWrittenWorks = useQuery({
-    queryKey: ["fetch-works", searchQuery, page, pageSize],
+export function useFetchWrittenWorks({
+  query,
+  page = 1,
+  pageSize = 30,
+}: GenericQuery) {
+  return useQuery({
+    queryKey: ["fetch-works", query, page, pageSize],
     queryFn: async () => {
       const response = await axios.get<string, AxiosResponse<WrittenWorks[]>>(
         aozoraApi +
           `writtenWorks/?s=${encodeURIComponent(
-            searchQuery
+            query
           )}&page=${page}&pageSize=${pageSize}`
       );
 
       return response.data;
     },
-    enabled: searchQuery.length > 0,
+    enabled: query.length > 0,
   });
-
-  return {
-    setPage,
-    setPageSize,
-    fetchWrittenWorks,
-  };
 }
