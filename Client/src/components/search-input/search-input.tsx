@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "@tanstack/react-router";
 
 import { useState } from "react";
 import useSearchQueryContext from "../../hooks/use-search-query-context";
@@ -7,6 +8,7 @@ import useSearchQueryContext from "../../hooks/use-search-query-context";
 export default function SearchInput() {
   const [inputValue, setInputValue] = useState("");
   const { setSearchQuery } = useSearchQueryContext();
+  const navigate = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -14,7 +16,11 @@ export default function SearchInput() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
     setSearchQuery(inputValue);
+
+    if (inputValue.length > 0) navigate({ to: "/written-works" });
+    else navigate({ to: "/" });
   };
 
   return (

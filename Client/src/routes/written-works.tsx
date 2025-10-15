@@ -1,10 +1,14 @@
-import WrittenWorksList from "../../components/written-works-list/written-works-list";
-import { useFetchWrittenWorks } from "../../hooks/use-aozora-api";
-import type { WrittenWorks } from "../../interfaces/aozora.type";
-import Loading from "../../components/loading/loading";
-import useSearchQueryContext from "../../hooks/use-search-query-context";
+import WrittenWorksList from "../components/written-works-list/written-works-list";
+import { useFetchWrittenWorks } from "../hooks/use-aozora-api";
+import Loading from "../components/loading/loading";
+import useSearchQueryContext from "../hooks/use-search-query-context";
+import { createFileRoute } from "@tanstack/react-router";
 
-export default function WrittenWorks() {
+export const Route = createFileRoute("/written-works")({
+  component: WrittenWorksPage,
+});
+
+function WrittenWorksPage() {
   const { searchQuery } = useSearchQueryContext();
   const { data, isPending } = useFetchWrittenWorks({ query: searchQuery });
 

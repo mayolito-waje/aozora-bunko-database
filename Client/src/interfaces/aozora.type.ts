@@ -26,7 +26,7 @@ export interface Source {
   originalSourcePublishDateInfo?: string;
 }
 
-export interface WrittenWorks {
+export interface WrittenWork {
   id: string;
   title: string;
   titleReading: string;

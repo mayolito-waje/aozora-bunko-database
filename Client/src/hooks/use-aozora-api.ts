@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios, { type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../utils/environment-variables";
-import type { WrittenWorks } from "../interfaces/aozora.type";
+import type { WrittenWork } from "../interfaces/aozora.type";
 
 interface GenericQuery {
   query: string;
@@ -18,7 +18,7 @@ export function useFetchWrittenWorks({
   return useQuery({
     queryKey: ["fetch-works", query, page, pageSize],
     queryFn: async () => {
-      const response = await axios.get<string, AxiosResponse<WrittenWorks[]>>(
+      const response = await axios.get<string, AxiosResponse<WrittenWork[]>>(
         aozoraApi +
           `writtenWorks/?s=${encodeURIComponent(
             query
