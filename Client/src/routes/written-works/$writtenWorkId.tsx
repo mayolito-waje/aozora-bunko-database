@@ -3,7 +3,6 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../../utils/environment-variables";
 import type { WrittenWork } from "../../interfaces/aozora.type";
-import NotFound from "../../components/not-found/not-found";
 
 export const Route = createFileRoute("/written-works/$writtenWorkId")({
   loader: async ({ params: { writtenWorkId } }) => {
@@ -22,7 +21,6 @@ export const Route = createFileRoute("/written-works/$writtenWorkId")({
     }
   },
   component: WrittenWorkId,
-  notFoundComponent: NotFound,
 });
 
 function WrittenWorkId() {
