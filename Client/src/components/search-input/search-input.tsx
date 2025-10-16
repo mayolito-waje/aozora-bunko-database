@@ -19,7 +19,8 @@ export default function SearchInput() {
 
     setSearchQuery(inputValue);
 
-    if (inputValue.length > 0) navigate({ to: "/written-works" });
+    if (inputValue.length > 0)
+      navigate({ to: "/written-works", search: () => ({ s: inputValue }) });
     else navigate({ to: "/" });
   };
 

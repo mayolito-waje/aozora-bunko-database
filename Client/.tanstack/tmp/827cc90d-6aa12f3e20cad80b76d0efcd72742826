@@ -4,7 +4,7 @@ import Loading from "../components/loading/loading";
 import useSearchQueryContext from "../hooks/use-search-query-context";
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/written-works")({
+export const Route = createFileRoute("/written-works/written-works")({
   component: WrittenWorksPage,
 });
 

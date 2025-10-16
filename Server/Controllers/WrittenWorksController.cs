@@ -20,6 +20,22 @@ namespace Server.Controllers
       return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> RetrieveWorkById(string id)
+    {
+      var work = await dbContext.WrittenWorks
+          .Include(w => w.Author)
+          .Include(w => w.WritingStyle)
+          .Include(w => w.WriterRole)
+          .IncludeSourceAndPublishers(w => w.Source)
+          .IncludeSourceAndPublishers(w => w.Source2)
+          .FirstOrDefaultAsync(w => w.Id == id);
+
+      if (work == null) return NotFound();
+
+      return Ok(work.ToDto());
+    }
+
     [HttpGet("shinji_shinkana")]
     public async Task<IActionResult> ShinjiShinkanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {

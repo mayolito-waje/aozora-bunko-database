@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { notFound } from "@tanstack/react-router";
 import axios, { type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../utils/environment-variables";
@@ -27,6 +28,20 @@ export function useFetchWrittenWorks({
 
       return response.data;
     },
-    enabled: query.length > 0,
+  });
+}
+
+export function useFetchWrittenWorkById(id: string) {
+  return useQuery({
+    queryKey: ["fetch-work-id", id],
+    queryFn: async () => {
+      const response = await axios.get<string, AxiosResponse<WrittenWork>>(
+        aozoraApi + `writtenWorks/${id}`
+      );
+
+      if (response.status === 404) throw notFound();
+
+      return response.data;
+    },
   });
 }

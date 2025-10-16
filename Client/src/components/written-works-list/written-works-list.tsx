@@ -1,7 +1,8 @@
-import type { WrittenWorks } from "../../interfaces/aozora.type";
+import { Link } from "@tanstack/react-router";
+import type { WrittenWork } from "../../interfaces/aozora.type";
 
 interface Props {
-  works: WrittenWorks[];
+  works: WrittenWork[];
 }
 
 export default function WrittenWorksList({ works }: Props) {
@@ -21,9 +22,14 @@ export default function WrittenWorksList({ works }: Props) {
               </p>
             </div>
             <div className="card-actions justify-end relative bottom-3 right-3">
-              <button className="btn text-white bg-blue-600 hover:opacity-80">
-                作品の詳細
-              </button>
+              <Link
+                to="/written-works/$writtenWorkId"
+                params={{ writtenWorkId: work.id }}
+              >
+                <button className="btn text-white bg-blue-600 hover:opacity-80">
+                  作品の詳細
+                </button>
+              </Link>
             </div>
           </div>
         );
