@@ -3,6 +3,7 @@ import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../../utils/environment-variables";
 import type { WrittenWork } from "../../interfaces/aozora.type";
+import WrittenWorkOverview from "../../components/written-work-overview/written-work-overview";
 
 export const Route = createFileRoute("/written-works/$writtenWorkId")({
   loader: async ({ params: { writtenWorkId } }) => {
@@ -29,13 +30,7 @@ function WrittenWorkId() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-start gap-2.5">
-        <span className="text-xl font-bold">{work?.title}</span>
-        <span>
-          {work?.author?.surname}
-          {work?.author?.givenName}
-        </span>
-      </div>
+      <WrittenWorkOverview work={work as WrittenWork} />
     </>
   );
 }

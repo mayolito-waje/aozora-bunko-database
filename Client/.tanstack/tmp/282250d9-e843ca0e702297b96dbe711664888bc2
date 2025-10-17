@@ -1,0 +1,9 @@
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/written-works/$writtenWorkId')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return <div>Hello "/written-works/$writtenWorkId"!</div>
+}

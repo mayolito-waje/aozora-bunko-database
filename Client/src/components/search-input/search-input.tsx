@@ -30,9 +30,9 @@ export default function SearchInput() {
         className="flex items-center gap-1.5 mx-auto mt-3 w-fit"
         onSubmit={handleSubmit}
       >
-        <div className="relative">
+        <div className="relative max-w-[75vw]">
           <input
-            className="py-1.5 pl-7 pr-1.5 border-gray-300 border-2 rounded-xl"
+            className="py-1.5 pl-7 pr-1.5 border-gray-300 border-2 rounded-xl w-full"
             type="search"
             value={inputValue}
             onChange={handleChange}
