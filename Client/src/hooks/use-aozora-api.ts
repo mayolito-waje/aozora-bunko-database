@@ -13,7 +13,7 @@ interface GenericQuery {
 export function useFetchWrittenWorks({
   query,
   page = 1,
-  pageSize = 30,
+  pageSize = 15,
 }: GenericQuery) {
   return useQuery({
     queryKey: ["fetch-works", query, page, pageSize],

@@ -9,7 +9,7 @@ export default function WrittenWorksList({ works }: Props) {
   return (
     <div
       id="written-works-list"
-      className="grid grid-cols-[repeat(auto-fit,_minmax(400px,_1fr))] mx-auto mt-5 w-5/6 gap-2"
+      className="grid grid-cols-[repeat(auto-fit,_minmax(400px,_1fr))] gap-2"
     >
       {works.map((work) => {
         return (
