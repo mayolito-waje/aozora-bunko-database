@@ -2,7 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../../utils/environment-variables";
-import type { WrittenWork } from "../../interfaces/aozora.type";
+import type { WrittenWork } from "../../interfaces/aozora.types";
 import WrittenWorkOverview from "../../components/written-work-overview/written-work-overview";
 
 export const Route = createFileRoute("/written-works/$writtenWorkId")({

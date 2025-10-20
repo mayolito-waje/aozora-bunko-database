@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios, { type AxiosResponse } from "axios";
 
 import { aozoraApi } from "../utils/environment-variables";
-import type { WrittenWork } from "../interfaces/aozora.type";
+import type { WrittenWork } from "../interfaces/aozora.types";
 
 interface GenericQuery {
   query: string;

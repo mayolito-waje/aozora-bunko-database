@@ -1,4 +1,4 @@
-import type { WrittenWork } from "../../interfaces/aozora.type";
+import type { WrittenWork } from "../../interfaces/aozora.types";
 
 interface Props {
   work: WrittenWork;
