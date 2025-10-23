@@ -1,5 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faCaretDown,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
 
 import { useState } from "react";
@@ -7,6 +10,7 @@ import useSearchQueryContext from "../../hooks/use-search-query-context";
 
 export default function SearchInput() {
   const [inputValue, setInputValue] = useState("");
+  const [filter, setFilter] = useState("作品");
   const { setSearchQuery } = useSearchQueryContext();
   const navigate = useNavigate();
 
@@ -30,6 +34,30 @@ export default function SearchInput() {
         className="flex items-center gap-1.5 mx-auto mt-3 w-fit"
         onSubmit={handleSubmit}
       >
+        <div className="dropdown">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn m-1 bg-blue-600 text-white"
+          >
+            {filter}
+            <FontAwesomeIcon icon={faCaretDown} />
+          </div>
+          <ul
+            tabIndex={-1}
+            className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+          >
+            <li onClick={() => setFilter("作品")}>
+              <a>作品</a>
+            </li>
+            <li onClick={() => setFilter("作家")}>
+              <a>作家</a>
+            </li>
+            <li onClick={() => setFilter("底本")}>
+              <a>底本</a>
+            </li>
+          </ul>
+        </div>
         <div className="relative max-w-[75vw]">
           <input
             className="py-1.5 pl-7 pr-1.5 border-gray-300 border-2 rounded-xl w-full"
