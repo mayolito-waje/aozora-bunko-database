@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import type { WrittenWork } from "../../interfaces/aozora.types";
 import BookCover from "../book-cover/book-cover";
+import { formatAuthorName } from "../../utils/format-author-name";
 
 interface Props {
   works: WrittenWork[];
@@ -29,8 +30,10 @@ export default function WrittenWorksList({ works }: Props) {
               <div className="card-body">
                 <h2 className="card-title">{work.title}</h2>
                 <p>
-                  {work.author.surname}
-                  {work.author.givenName}
+                  {formatAuthorName({
+                    givenName: work?.author?.givenName,
+                    surname: work?.author?.surname,
+                  })}
                 </p>
                 <br />
                 <div className=" bg-blue-400 p-1.5 text-center size-fit rounded-2xl flex items-center justify-center">

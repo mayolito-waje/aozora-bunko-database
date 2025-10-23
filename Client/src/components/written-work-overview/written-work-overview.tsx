@@ -5,17 +5,17 @@ import { faDownload, faFileCode } from "@fortawesome/free-solid-svg-icons";
 import BookCover from "../book-cover/book-cover";
 import BookOverviewTabs from "./book-overview-tabs";
 import { useWikipediaBookSummary } from "../../hooks/use-wikipedia";
-import { isKatakana } from "../../utils/kana-checker";
+import { formatAuthorName } from "../../utils/format-author-name";
 
 interface Props {
   work: WrittenWork;
 }
 
 export default function WrittenWorkOverview({ work }: Props) {
-  const baseAuthorName = `${work?.author?.surname}${work?.author?.givenName}`;
-  const authorName = isKatakana(baseAuthorName)
-    ? `${work?.author?.givenName}・${work?.author?.surname}`
-    : baseAuthorName;
+  const authorName = formatAuthorName({
+    givenName: work?.author?.givenName,
+    surname: work?.author?.surname,
+  });
 
   const { data: wikipediaData } = useWikipediaBookSummary(
     work.title,
