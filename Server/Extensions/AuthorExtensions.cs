@@ -1,4 +1,5 @@
 using System;
+using System.Text.RegularExpressions;
 using Server.DTOs;
 using Server.Models;
 
@@ -23,5 +24,20 @@ public static class AuthorExtensions
       DeathDate = author.DeathDate,
       PersonalityRights = author.PersonalityRights,
     };
+  }
+
+  public static string ToFullName(this Author author)
+  {
+    var baseAuthorName = $"{author.Surname}{author.GivenName}";
+
+    var baseString = @"\u30A0-\u30FF\u30FC\u30FB";
+    var space = @"\s";
+    var punct = @"\p{P}";
+    var pattern = @$"^[{baseString}{space}{punct}]+$";
+    Match isKatakana = Regex.Match(baseAuthorName, pattern, RegexOptions.IgnoreCase);
+
+    string fullName = isKatakana.Success ? $"{author.GivenName}・{author.Surname}" : baseAuthorName;
+
+    return fullName;
   }
 }

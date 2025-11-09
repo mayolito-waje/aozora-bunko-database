@@ -2,6 +2,7 @@ import WrittenWorksList from "../../components/written-works-list/written-works-
 import { useFetchWrittenWorks } from "../../hooks/use-aozora-api";
 import Loading from "../../components/loading/loading";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import Pagination from "../../components/pagination/pagination";
 
 interface WrittenWorksPageSearch {
   s?: string;
@@ -80,15 +81,11 @@ function WrittenWorksPage() {
           </div>
         )}
 
-        <div className="join self-center">
-          <button className="join-item btn" onClick={previous}>
-            «
-          </button>
-          <button className="join-item btn">{page}</button>
-          <button className="join-item btn" onClick={next}>
-            »
-          </button>
-        </div>
+        <Pagination
+          currentPage={page}
+          onClickPrevious={previous}
+          onClickNext={next}
+        />
       </div>
     </>
   );

@@ -9,8 +9,10 @@ import { useState } from "react";
 import useSearchQueryContext from "../../hooks/use-search-query-context";
 
 export default function SearchInput() {
+  type SearchQueryType = "作品" | "作家";
+
   const [inputValue, setInputValue] = useState("");
-  const [filter, setFilter] = useState("作品");
+  const [filter, setFilter] = useState<SearchQueryType>("作品");
   const { setSearchQuery } = useSearchQueryContext();
   const navigate = useNavigate();
 
@@ -23,9 +25,18 @@ export default function SearchInput() {
 
     setSearchQuery(inputValue);
 
-    if (inputValue.length > 0)
-      navigate({ to: "/written-works", search: () => ({ s: inputValue }) });
-    else navigate({ to: "/" });
+    if (inputValue.length > 0) {
+      switch (filter) {
+        case "作品":
+          navigate({ to: "/written-works", search: () => ({ s: inputValue }) });
+          break;
+        case "作家":
+          navigate({ to: "/authors", search: () => ({ s: inputValue }) });
+          break;
+      }
+    } else {
+      navigate({ to: "/" });
+    }
   };
 
   return (
@@ -53,9 +64,9 @@ export default function SearchInput() {
             <li onClick={() => setFilter("作家")}>
               <a>作家</a>
             </li>
-            <li onClick={() => setFilter("底本")}>
+            {/* <li onClick={() => setFilter("底本")}>
               <a>底本</a>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="relative max-w-[75vw]">

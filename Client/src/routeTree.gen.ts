@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WrittenWorksIndexRouteImport } from './routes/written-works/index'
+import { Route as AuthorsIndexRouteImport } from './routes/authors/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
 import { Route as WrittenWorksWrittenWorkIdRouteImport } from './routes/written-works/$writtenWorkId'
+import { Route as AuthorsAuthorIdRouteImport } from './routes/authors/$authorId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const WrittenWorksIndexRoute = WrittenWorksIndexRouteImport.update({
   id: '/written-works/',
   path: '/written-works/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsIndexRoute = AuthorsIndexRouteImport.update({
+  id: '/authors/',
+  path: '/authors/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -35,43 +42,70 @@ const WrittenWorksWrittenWorkIdRoute =
     path: '/written-works/$writtenWorkId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthorsAuthorIdRoute = AuthorsAuthorIdRouteImport.update({
+  id: '/authors/$authorId',
+  path: '/authors/$authorId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/written-works/$writtenWorkId': typeof WrittenWorksWrittenWorkIdRoute
   '/about': typeof AboutIndexRoute
+  '/authors': typeof AuthorsIndexRoute
   '/written-works': typeof WrittenWorksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/written-works/$writtenWorkId': typeof WrittenWorksWrittenWorkIdRoute
   '/about': typeof AboutIndexRoute
+  '/authors': typeof AuthorsIndexRoute
   '/written-works': typeof WrittenWorksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/authors/$authorId': typeof AuthorsAuthorIdRoute
   '/written-works/$writtenWorkId': typeof WrittenWorksWrittenWorkIdRoute
   '/about/': typeof AboutIndexRoute
+  '/authors/': typeof AuthorsIndexRoute
   '/written-works/': typeof WrittenWorksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/written-works/$writtenWorkId' | '/about' | '/written-works'
+  fullPaths:
+    | '/'
+    | '/authors/$authorId'
+    | '/written-works/$writtenWorkId'
+    | '/about'
+    | '/authors'
+    | '/written-works'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/written-works/$writtenWorkId' | '/about' | '/written-works'
+  to:
+    | '/'
+    | '/authors/$authorId'
+    | '/written-works/$writtenWorkId'
+    | '/about'
+    | '/authors'
+    | '/written-works'
   id:
     | '__root__'
     | '/'
+    | '/authors/$authorId'
     | '/written-works/$writtenWorkId'
     | '/about/'
+    | '/authors/'
     | '/written-works/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthorsAuthorIdRoute: typeof AuthorsAuthorIdRoute
   WrittenWorksWrittenWorkIdRoute: typeof WrittenWorksWrittenWorkIdRoute
   AboutIndexRoute: typeof AboutIndexRoute
+  AuthorsIndexRoute: typeof AuthorsIndexRoute
   WrittenWorksIndexRoute: typeof WrittenWorksIndexRoute
 }
 
@@ -91,6 +125,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WrittenWorksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/authors/': {
+      id: '/authors/'
+      path: '/authors'
+      fullPath: '/authors'
+      preLoaderRoute: typeof AuthorsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about/': {
       id: '/about/'
       path: '/about'
@@ -105,13 +146,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WrittenWorksWrittenWorkIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/authors/$authorId': {
+      id: '/authors/$authorId'
+      path: '/authors/$authorId'
+      fullPath: '/authors/$authorId'
+      preLoaderRoute: typeof AuthorsAuthorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthorsAuthorIdRoute: AuthorsAuthorIdRoute,
   WrittenWorksWrittenWorkIdRoute: WrittenWorksWrittenWorkIdRoute,
   AboutIndexRoute: AboutIndexRoute,
+  AuthorsIndexRoute: AuthorsIndexRoute,
   WrittenWorksIndexRoute: WrittenWorksIndexRoute,
 }
 export const routeTree = rootRouteImport
