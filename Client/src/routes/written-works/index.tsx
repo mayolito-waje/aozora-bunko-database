@@ -1,7 +1,9 @@
+import { useEffect } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+
 import WrittenWorksList from "../../components/written-works-list/written-works-list";
 import { useFetchWrittenWorks } from "../../hooks/use-aozora-api";
 import Loading from "../../components/loading/loading";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Pagination from "../../components/pagination/pagination";
 
 interface WrittenWorksPageSearch {
@@ -21,6 +23,12 @@ export const Route = createFileRoute("/written-works/")({
 });
 
 function WrittenWorksPage() {
+  const fullUrl = window.location.href;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [fullUrl]);
+
   const { s: search } = Route.useSearch();
   let { page, pageSize } = Route.useSearch();
   const navigate = useNavigate();

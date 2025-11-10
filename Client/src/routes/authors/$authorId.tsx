@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import axios, { AxiosError, type AxiosResponse } from "axios";
+import { useEffect } from "react";
 
 import type { WrittenWorksAuthor } from "../../interfaces/aozora.types";
 import { aozoraApi } from "../../utils/environment-variables";
@@ -8,7 +9,6 @@ import WrittenWorksList from "../../components/written-works-list/written-works-
 import Pagination from "../../components/pagination/pagination";
 import { formatAuthorName } from "../../utils/format-author-name";
 import { useFetchAuthorWorks } from "../../hooks/use-aozora-api";
-import { useEffect } from "react";
 
 interface AuthorsPageSearch {
   worksPage?: number;

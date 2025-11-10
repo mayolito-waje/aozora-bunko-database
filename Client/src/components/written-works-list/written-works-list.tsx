@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+
 import type { WrittenWork } from "../../interfaces/aozora.types";
 import BookCover from "../book-cover/book-cover";
 import { formatAuthorName } from "../../utils/format-author-name";
