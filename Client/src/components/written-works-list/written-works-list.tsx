@@ -5,9 +5,13 @@ import { formatAuthorName } from "../../utils/format-author-name";
 
 interface Props {
   works: WrittenWork[];
+  showAuthorName?: boolean;
 }
 
-export default function WrittenWorksList({ works }: Props) {
+export default function WrittenWorksList({
+  works,
+  showAuthorName = true,
+}: Props) {
   return (
     <div
       id="written-works-list"
@@ -20,7 +24,7 @@ export default function WrittenWorksList({ works }: Props) {
             to="/written-works/$writtenWorkId"
             params={{ writtenWorkId: work.id }}
           >
-            <div className="card bg-base-100 shadow-sm max-w-[80vw] relative cursor-pointer hover:opacity-75">
+            <div className="card bg-base-100 shadow-sm max-w-[80vw] min-h-full relative cursor-pointer hover:opacity-75">
               <figure className="p-2">
                 <BookCover
                   title={work?.title as string}
@@ -29,12 +33,14 @@ export default function WrittenWorksList({ works }: Props) {
               </figure>
               <div className="card-body">
                 <h2 className="card-title">{work.title}</h2>
-                <p>
-                  {formatAuthorName({
-                    givenName: work?.author?.givenName,
-                    surname: work?.author?.surname,
-                  })}
-                </p>
+                {showAuthorName ? (
+                  <p>
+                    {formatAuthorName({
+                      givenName: work?.author?.givenName,
+                      surname: work?.author?.surname,
+                    })}
+                  </p>
+                ) : null}
                 <br />
                 <div className=" bg-blue-400 p-1.5 text-center size-fit rounded-2xl flex items-center justify-center">
                   <span className="text-[13px] font-bold text-white">

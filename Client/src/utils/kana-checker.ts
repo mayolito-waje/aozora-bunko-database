@@ -1,4 +1,4 @@
-export function isKatakana(
+export function isKana(
   input: string,
   { allowSpaces = true, allowPunctuation = true, convertHalfwidth = true } = {}
 ) {
@@ -6,10 +6,10 @@ export function isKatakana(
 
   const str = convertHalfwidth ? input.normalize("NFKC").trim() : input.trim();
 
-  const base = "\\u30A0-\\u30FF\\u30FC\\u30FB";
+  const base = "\\p{Script=Katakana}\\p{Script=Hiragana}・ヽヾ゛゜ー";
   const alpha = "A-Za-z";
   const space = allowSpaces ? "\\s" : "";
-  const punctuation = allowPunctuation ? "\\p{P}・" : "";
+  const punctuation = allowPunctuation ? "\\p{P}" : "";
   const pattern = `^[${base}${alpha}${space}${punctuation}]+$`;
   const re = new RegExp(pattern, "u");
 

@@ -1,4 +1,4 @@
-import { isKatakana } from "./kana-checker";
+import { isKana } from "./kana-checker";
 
 export function formatAuthorName({
   givenName,
@@ -9,7 +9,7 @@ export function formatAuthorName({
 }) {
   const baseAuthorName = `${surname}${givenName}`;
 
-  const authorName = isKatakana(baseAuthorName)
+  const authorName = isKana(baseAuthorName)
     ? `${givenName}・${surname}`
     : baseAuthorName;
 

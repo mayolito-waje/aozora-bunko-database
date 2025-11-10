@@ -50,7 +50,7 @@ export default function WrittenWorkOverview({ work }: Props) {
       </div>
       {wikipediaData && wikipediaData.status !== 404 && (
         <div className="w-11/12 mx-auto mt-5 border-blue-600 border-y-2 py-2">
-          <h3 className="font-bold text-lg">あらすじ</h3>
+          <h3 className="font-bold text-lg">作品について</h3>
           <br />
           <div className="mx-5">
             <p>{wikipediaData?.extract}</p>

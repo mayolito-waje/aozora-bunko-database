@@ -43,11 +43,6 @@ public static class QueryableExtensions
              (string.IsNullOrEmpty(search) ||
               EF.Functions.Like(w.Title, $"%{search}%") ||
               EF.Functions.Like(w.TitleReading, $"%{search}%") ||
-              EF.Functions.Like(w.TitleSort, $"%{search}%")) ||
-              (w.Author != null && EF.Functions.Like(w.Author.Surname + w.Author.GivenName, $"%{search}%")) ||
-              (w.Author != null) && EF.Functions.Like(
-                (w.Author.GivenNameRomaji != null ? w.Author.GivenNameRomaji.ToLower() + " " : "") + w.Author.SurnameRomaji.ToLower(),
-                $"%{search}%"
-              ));
+              EF.Functions.Like(w.TitleSort, $"%{search}%")));
   }
 }

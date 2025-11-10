@@ -55,3 +55,25 @@ export function useFetchAuthors({
     },
   });
 }
+
+export function useFetchAuthorWorks({
+  authorId,
+  page = 1,
+  pageSize = 10,
+}: {
+  authorId: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  return useQuery({
+    queryKey: ["fetch-author-works", authorId, page, pageSize],
+    queryFn: async () => {
+      const response = await axios.get<string, AxiosResponse<WrittenWork[]>>(
+        aozoraApi +
+          `writtenWorks/?authorId=${authorId}&page=${page}&pageSize=${pageSize}`
+      );
+
+      return response.data;
+    },
+  });
+}

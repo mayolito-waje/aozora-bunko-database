@@ -84,7 +84,7 @@ export function useWikipediaBookSummary(title: string, author?: string) {
           return tryResult.data;
         } catch (error: unknown) {
           if (axios.isAxiosError(error) && error.response?.status === 404)
-            return null;
+            continue;
 
           console.error(error);
         }
