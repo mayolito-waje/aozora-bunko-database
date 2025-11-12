@@ -94,8 +94,8 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       GivenNameReading = data.GivenNameReading,
       GivenNameSort = data.GivenNameSort,
       GivenNameRomaji = data.GivenNameRomaji,
-      BirthDate = !string.IsNullOrEmpty(data.BirthDate) ? DateOnly.Parse(data.BirthDate) : null,
-      DeathDate = !string.IsNullOrEmpty(data.DeathDate) ? DateOnly.Parse(data.DeathDate) : null,
+      BirthDate = data.BirthDate,
+      DeathDate = data.DeathDate,
       PersonalityRights = data.PersonalityRights == "あり",
     };
 

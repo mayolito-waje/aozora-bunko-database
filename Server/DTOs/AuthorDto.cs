@@ -11,7 +11,7 @@ public class AuthorDto
   public string? GivenNameReading { get; set; }
   public string? GivenNameSort { get; set; }
   public string? GivenNameRomaji { get; set; }
-  public DateOnly? BirthDate { get; set; }
-  public DateOnly? DeathDate { get; set; }
+  public string? BirthDate { get; set; }
+  public string? DeathDate { get; set; }
   public bool PersonalityRights { get; set; } = false;
 }

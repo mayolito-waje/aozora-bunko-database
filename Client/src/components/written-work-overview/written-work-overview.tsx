@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { WrittenWork } from "../../interfaces/aozora.types";
 import { faDownload, faFileCode } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "@tanstack/react-router";
 
 import BookCover from "../book-cover/book-cover";
 import BookOverviewTabs from "./book-overview-tabs";
@@ -29,7 +30,14 @@ export default function WrittenWorkOverview({ work }: Props) {
           <BookCover title={work?.title as string} author={authorName} />
           <div className="flex flex-col p-2 gap-2 items-center md:items-start">
             <span className="text-xl font-bold">{work?.title}</span>
-            <span>{authorName}</span>
+            <Link
+              to="/authors/$authorId"
+              params={{ authorId: work?.author.id }}
+            >
+              <span className="cursor-pointer hover:decoration-solid">
+                {authorName}
+              </span>
+            </Link>
             <br />
             <div className="flex gap-2 flex-row">
               <a href={work?.textLink}>

@@ -39,6 +39,11 @@ var app = builder.Build();
 // }
 
 app.UseCors(allowClient);
-app.MapControllers();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+  );
 
 app.Run();
+
+public partial class Program { }
