@@ -18,9 +18,9 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
     await action(dbContext);
   }
 
-  public async Task PopulateAozoraDatabase()
+  public async Task PopulateAozoraDatabase(string csvPath)
   {
-    using var reader = new StreamReader("aozora.csv");
+    using var reader = new StreamReader(csvPath);
     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
     csv.Context.RegisterClassMap<AozoraMap>();
