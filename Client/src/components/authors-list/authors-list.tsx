@@ -21,7 +21,7 @@ function AuthorsList({ authors }: Props) {
             key={author.id}
             params={{ authorId: author.id }}
           >
-            <div className="card bg-base-100 shadow-sm max-w-[80vw] relative cursor-pointer hover:opacity-75">
+            <div className="card bg-base-100 shadow-sm max-w-[80vw] min-h-full relative cursor-pointer hover:opacity-75">
               <DisplayAuthorThumbnail author={author} />
               <div className="card-body">
                 <h2 className="card-title">

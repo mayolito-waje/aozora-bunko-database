@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Server.Contexts;
 using Server.Data;
 using Server.Interfaces;
 using Server.Services;
@@ -13,10 +14,12 @@ builder.Services.AddControllers()
   {
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
   });
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 builder.Services.AddCors(options =>
 {
   options.AddPolicy(name: allowClient,
@@ -25,6 +28,10 @@ builder.Services.AddCors(options =>
                       policy.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod();
                     });
 });
+
+builder.Services.AddScoped<IWrittenWorksContext, WrittenWorksContext>();
+builder.Services.AddScoped<IAuthorsContext, AuthorsContext>();
+builder.Services.AddScoped<IPublishersContext, PublishersContext>();
 builder.Services.AddSingleton<IAozoraDatabaseService, AozoraDatabaseService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

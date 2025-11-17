@@ -1,21 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.Extensions;
+using Server.Extra.Enums;
+using Server.Interfaces;
 using X.PagedList.Extensions;
 
 namespace Server.Controllers
 {
-  public class WrittenWorksController(AppDbContext dbContext) : ControllerProvider
+  public class WrittenWorksController : ControllerProvider
   {
+    private readonly IWrittenWorksContext _writtenWorksDb;
+
+    public WrittenWorksController(IWrittenWorksContext writtenWorksDb)
+    {
+      _writtenWorksDb = writtenWorksDb;
+    }
+
     [HttpGet]
     public async Task<IActionResult> RetrieveWorks([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      var works = await dbContext.WrittenWorks
-          .IsMatchingSearchAndAuthor(search, authorId)
-          .SortAndIncludeDetails()
-          .Select(w => w.ToDto())
-          .ToListAsync();
+      var works = await _writtenWorksDb.GetByQuery(search, authorId);
 
       return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
     }
@@ -23,69 +25,39 @@ namespace Server.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> RetrieveWorkById(string id)
     {
-      var work = await dbContext.WrittenWorks
-          .Include(w => w.Author)
-          .Include(w => w.WritingStyle)
-          .Include(w => w.WriterRole)
-          .IncludeSourceAndPublishers(w => w.Source)
-          .IncludeSourceAndPublishers(w => w.Source2)
-          .FirstOrDefaultAsync(w => w.Id == id);
+      var work = await _writtenWorksDb.GetById(id);
 
       if (work == null) return NotFound();
 
-      return Ok(work.ToDto());
+      return Ok(work);
     }
 
     [HttpGet("shinji_shinkana")]
     public async Task<IActionResult> ShinjiShinkanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      var works = await dbContext.WrittenWorks
-          .IsMatchingSearchAndAuthor(search, authorId)
-          .Where(w => w.WritingStyle!.Style == "新字新仮名")
-          .SortAndIncludeDetails()
-          .Select(w => w.ToDto())
-          .ToListAsync();
-
-      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+      var works = await _writtenWorksDb.GetByWritingStyle(search, authorId, WritingStyles.ShinJiShinKana);
+      return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
     [HttpGet("kyuuji_kyuukana")]
     public async Task<IActionResult> KyuujiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      var works = await dbContext.WrittenWorks
-          .IsMatchingSearchAndAuthor(search, authorId)
-          .Where(w => w.WritingStyle!.Style == "旧字旧仮名")
-          .SortAndIncludeDetails()
-          .Select(w => w.ToDto())
-          .ToListAsync();
-
-      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+      var works = await _writtenWorksDb.GetByWritingStyle(search, authorId, WritingStyles.KyuuJiKyuuKana);
+      return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
     [HttpGet("shinji_kyuukana")]
     public async Task<IActionResult> ShinjiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      var works = await dbContext.WrittenWorks
-          .IsMatchingSearchAndAuthor(search, authorId)
-          .Where(w => w.WritingStyle!.Style == "新字旧仮名")
-          .SortAndIncludeDetails()
-          .Select(w => w.ToDto())
-          .ToListAsync();
-
-      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+      var works = await _writtenWorksDb.GetByWritingStyle(search, authorId, WritingStyles.ShinJiKyuuKana);
+      return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
     [HttpGet("non_kana")]
     public async Task<IActionResult> NonKanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
-      var works = await dbContext.WrittenWorks
-          .IsMatchingSearchAndAuthor(search, authorId)
-          .Where(w => w.WritingStyle!.Style == "その他")
-          .SortAndIncludeDetails()
-          .Select(w => w.ToDto())
-          .ToListAsync();
-
-      return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
+      var works = await _writtenWorksDb.GetByWritingStyle(search, authorId, WritingStyles.Other);
+      return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
   }
 }

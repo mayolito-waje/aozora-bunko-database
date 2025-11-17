@@ -1,20 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.DTOs;
-using Server.Extensions;
+using Server.Interfaces;
 using X.PagedList.Extensions;
 
 namespace Server.Controllers
 {
-  public class PublishersController(AppDbContext dbContext) : ControllerProvider
+  public class PublishersController : ControllerProvider
   {
+    private readonly IPublishersContext _publishersDb;
+
+    public PublishersController(IPublishersContext publishersDb)
+    {
+      _publishersDb = publishersDb;
+    }
+
     [HttpGet]
     public async Task<IActionResult> RetrievePublishers(int? page, int? pageSize)
     {
-      var publishers = await dbContext.Publishers.Select(
-          p => new PublisherDto() { Id = p.Id, Name = p.Name }
-      ).ToListAsync();
+      var publishers = await _publishersDb.GetPublishers();
 
       return Ok(publishers.ToPagedList(page ?? 1, pageSize ?? 25));
     }
@@ -22,24 +24,14 @@ namespace Server.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> RetrievePublisherById(string id, int? sourcePage, int? sourcePageSize)
     {
-      var publisher = await dbContext.Publishers.FindAsync(id);
+      var publisher = await _publishersDb.GetPublisherById(id);
 
       if (publisher == null)
         return NotFound();
 
-      var sources = await dbContext.Sources
-          .Where(s => s.PublisherId == publisher.Id)
-          .Select(s => s.NameAndPublishDateDto())
-          .ToListAsync();
+      var sources = await _publishersDb.IncludeSources(publisher, sourcePage, sourcePageSize);
 
-      var sourcesList = sources.ToPagedList(sourcePage ?? 1, sourcePageSize ?? 25);
-
-      return Ok(new
-      {
-        publisher.Id,
-        publisher.Name,
-        sources = sourcesList
-      });
+      return Ok(sources);
     }
   }
 }

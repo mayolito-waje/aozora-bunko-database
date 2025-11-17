@@ -4,7 +4,7 @@ using Server.Interfaces;
 
 namespace Server.Controllers
 {
-  public class Test(IAozoraDatabaseService aozoraDatabaseService, IHostEnvironment env, AppDbContext dbContext) : ControllerProvider
+  public class Test(IAozoraDatabaseService aozoraDatabaseService, IHostEnvironment env) : ControllerProvider
   {
     [HttpPost("test-db-populate")]
     public async Task<ActionResult<string>> PopulateDB()
