@@ -8,15 +8,15 @@ using Server.Models;
 
 namespace Server.Services;
 
-public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraDatabaseService
+public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseService
 {
-  private async Task UseDbContext(Func<AppDbContext, Task> action)
-  {
-    using var scope = scopeFactory.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+  // private async Task UseDbContext(Func<AppDbContext, Task> action)
+  // {
+  //   using var scope = scopeFactory.CreateScope();
+  //   var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    await action(dbContext);
-  }
+  //   await action(dbContext);
+  // }
 
   public async Task PopulateAozoraDatabase(string csvPath)
   {
@@ -33,52 +33,45 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
 
   private async Task<bool> AddRow(Aozora data)
   {
-    bool returnValue = false;
+    var author = await dbContext.Authors.FindAsync(data.AuthorId);
+    author ??= await AddAuthor(data);
 
-    await UseDbContext(async dbContext =>
+    string? source1 = await HandleSource(new AozoraSourceExtended()
     {
-      var author = await dbContext.Authors.FindAsync(data.AuthorId);
-      author ??= await AddAuthor(data);
-
-      string? source1 = await HandleSource(new AozoraSourceExtended()
-      {
-        Source = data.Source,
-        SourcePublisher = data.SourcePublisher,
-        SourcePublishDate = data.SourcePublishDate,
-        OriginalSource = data.OriginalSource,
-        OriginalSourcePublisher = data.OriginalSourcePublisher,
-        OriginalSourcePublishDate = data.OriginalSourcePublishDate,
-      });
-
-      string? source2 = await HandleSource(new AozoraSourceExtended()
-      {
-        Source = data.Source2,
-        SourcePublisher = data.SourcePublisher2,
-        SourcePublishDate = data.SourcePublishDate2,
-        OriginalSource = data.OriginalSource2,
-        OriginalSourcePublisher = data.OriginalSourcePublisher2,
-        OriginalSourcePublishDate = data.OriginalSourcePublishDate2,
-      });
-
-      var writerRole = await dbContext.WriterRoles.FindAsync(data.WriterRole);
-      writerRole ??= await AddWriterRole(data.WriterRole);
-
-      var writingStyle = await dbContext.WritingStyles.FindAsync(data.WritingStyle);
-      writingStyle ??= await AddWritingStyle(data.WritingStyle);
-
-      var writtenWork = await dbContext.WrittenWorks.FindAsync(data.WrittenWorkId);
-      if (writtenWork != null)
-      {
-        returnValue = false;
-      }
-      else
-      {
-        await AddWrittenWork(data, author, source1, source2, writerRole, writingStyle);
-        returnValue = true;
-      }
+      Source = data.Source,
+      SourcePublisher = data.SourcePublisher,
+      SourcePublishDate = data.SourcePublishDate,
+      OriginalSource = data.OriginalSource,
+      OriginalSourcePublisher = data.OriginalSourcePublisher,
+      OriginalSourcePublishDate = data.OriginalSourcePublishDate,
     });
 
-    return returnValue;
+    string? source2 = await HandleSource(new AozoraSourceExtended()
+    {
+      Source = data.Source2,
+      SourcePublisher = data.SourcePublisher2,
+      SourcePublishDate = data.SourcePublishDate2,
+      OriginalSource = data.OriginalSource2,
+      OriginalSourcePublisher = data.OriginalSourcePublisher2,
+      OriginalSourcePublishDate = data.OriginalSourcePublishDate2,
+    });
+
+    var writerRole = await dbContext.WriterRoles.FindAsync(data.WriterRole);
+    writerRole ??= await AddWriterRole(data.WriterRole);
+
+    var writingStyle = await dbContext.WritingStyles.FindAsync(data.WritingStyle);
+    writingStyle ??= await AddWritingStyle(data.WritingStyle);
+
+    var writtenWork = await dbContext.WrittenWorks.FindAsync(data.WrittenWorkId);
+    if (writtenWork != null)
+    {
+      return false;
+    }
+    else
+    {
+      await AddWrittenWork(data, author, source1, source2, writerRole, writingStyle);
+      return true;
+    }
   }
 
   private async Task<Author> AddAuthor(Aozora data)
@@ -99,11 +92,8 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       PersonalityRights = data.PersonalityRights == "あり",
     };
 
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.Authors.Add(newAuthor);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.Authors.Add(newAuthor);
+    await dbContext.SaveChangesAsync();
 
     return newAuthor;
   }
@@ -115,22 +105,16 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       Name = publisherName
     };
 
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.Publishers.Add(newPublisher);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.Publishers.Add(newPublisher);
+    await dbContext.SaveChangesAsync();
 
     return newPublisher;
   }
 
   private async Task<Source> AddSource(Source data)
   {
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.Sources.Add(data);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.Sources.Add(data);
+    await dbContext.SaveChangesAsync();
 
     return data;
   }
@@ -139,56 +123,53 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
   {
     Source? source = null;
 
-    await UseDbContext(async dbContext =>
+    Publisher? originalSourcePublisher = null;
+    if (!string.IsNullOrEmpty(data.OriginalSourcePublisher))
     {
-      Publisher? originalSourcePublisher = null;
-      if (!string.IsNullOrEmpty(data.OriginalSourcePublisher))
-      {
-        originalSourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
-          x => x.Name == data.OriginalSourcePublisher
+      originalSourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
+        x => x.Name == data.OriginalSourcePublisher
+      );
+      originalSourcePublisher ??= await AddPublisher(data.OriginalSourcePublisher);
+    }
+
+    Source? originalSource = null;
+    if (!string.IsNullOrEmpty(data.OriginalSource))
+    {
+      if (originalSourcePublisher != null)
+        originalSource = await dbContext.Sources.SingleOrDefaultAsync(
+          x => x.Name == data.OriginalSource && x.PublisherId == originalSourcePublisher.Id
         );
-        originalSourcePublisher ??= await AddPublisher(data.OriginalSourcePublisher);
-      }
-
-      Source? originalSource = null;
-      if (!string.IsNullOrEmpty(data.OriginalSource))
+      originalSource ??= await AddSource(new Source()
       {
-        if (originalSourcePublisher != null)
-          originalSource = await dbContext.Sources.SingleOrDefaultAsync(
-            x => x.Name == data.OriginalSource && x.PublisherId == originalSourcePublisher.Id
-          );
-        originalSource ??= await AddSource(new Source()
-        {
-          Name = data.OriginalSource,
-          PublisherId = originalSourcePublisher?.Id,
-          PublishDateInfo = data.OriginalSourcePublishDate,
-        });
-      }
+        Name = data.OriginalSource,
+        PublisherId = originalSourcePublisher?.Id,
+        PublishDateInfo = data.OriginalSourcePublishDate,
+      });
+    }
 
-      Publisher? sourcePublisher = null;
-      if (!string.IsNullOrEmpty(data.SourcePublisher))
-      {
-        sourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
-          x => x.Name == data.SourcePublisher
+    Publisher? sourcePublisher = null;
+    if (!string.IsNullOrEmpty(data.SourcePublisher))
+    {
+      sourcePublisher = await dbContext.Publishers.SingleOrDefaultAsync(
+        x => x.Name == data.SourcePublisher
+      );
+      sourcePublisher ??= await AddPublisher(data.SourcePublisher);
+    }
+
+    if (!string.IsNullOrEmpty(data.Source))
+    {
+      if (sourcePublisher != null)
+        source = await dbContext.Sources.SingleOrDefaultAsync(
+          x => x.Name == data.Source && x.PublisherId == sourcePublisher.Id
         );
-        sourcePublisher ??= await AddPublisher(data.SourcePublisher);
-      }
-
-      if (!string.IsNullOrEmpty(data.Source))
+      source ??= await AddSource(new Source()
       {
-        if (sourcePublisher != null)
-          source = await dbContext.Sources.SingleOrDefaultAsync(
-            x => x.Name == data.Source && x.PublisherId == sourcePublisher.Id
-          );
-        source ??= await AddSource(new Source()
-        {
-          Name = data.Source,
-          PublisherId = sourcePublisher?.Id,
-          PublishDateInfo = data.SourcePublishDate,
-          OriginalSourceId = originalSource?.Id,
-        });
-      }
-    });
+        Name = data.Source,
+        PublisherId = sourcePublisher?.Id,
+        PublishDateInfo = data.SourcePublishDate,
+        OriginalSourceId = originalSource?.Id,
+      });
+    }
 
     return source?.Id;
   }
@@ -197,11 +178,8 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
   {
     var writerRole = new WriterRole() { Role = role };
 
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.WriterRoles.Add(writerRole);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.WriterRoles.Add(writerRole);
+    await dbContext.SaveChangesAsync();
 
     return writerRole;
   }
@@ -210,11 +188,8 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
   {
     var writingStyle = new WritingStyle() { Style = style };
 
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.WritingStyles.Add(writingStyle);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.WritingStyles.Add(writingStyle);
+    await dbContext.SaveChangesAsync();
 
     return writingStyle;
   }
@@ -243,10 +218,7 @@ public class AozoraDatabaseService(IServiceScopeFactory scopeFactory) : IAozoraD
       HTMLLink = data?.HTMLLink ?? string.Empty,
     };
 
-    await UseDbContext(async dbContext =>
-    {
-      dbContext.WrittenWorks.Add(newWrittenWork);
-      await dbContext.SaveChangesAsync();
-    });
+    dbContext.WrittenWorks.Add(newWrittenWork);
+    await dbContext.SaveChangesAsync();
   }
 }

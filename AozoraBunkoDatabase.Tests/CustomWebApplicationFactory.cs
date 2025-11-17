@@ -35,7 +35,7 @@ public class CustomWebApplicationFactory<TProgram>
         options.UseSqlite(_connection);
       });
 
-      services.AddSingleton<AozoraDatabaseService>();
+      services.AddScoped<AozoraDatabaseService>();
 
       builder.UseEnvironment("Development");
     });

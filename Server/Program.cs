@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IWrittenWorksContext, WrittenWorksContext>();
 builder.Services.AddScoped<IAuthorsContext, AuthorsContext>();
 builder.Services.AddScoped<IPublishersContext, PublishersContext>();
-builder.Services.AddSingleton<IAozoraDatabaseService, AozoraDatabaseService>();
+builder.Services.AddScoped<IAozoraDatabaseService, AozoraDatabaseService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
