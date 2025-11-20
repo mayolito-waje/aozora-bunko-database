@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AozoraBunkoDatabase.Tests.IntegrationTests;
 
+[Collection("Sequential")]
 public class WrittenWorksControllerTests
     : IClassFixture<CustomWebApplicationFactory<Program>>
 {

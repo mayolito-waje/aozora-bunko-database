@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace AozoraBunkoDatabase.Tests.IntegrationTests;
 
+[Collection("Sequential")]
 public class IndexPageTests :
     IClassFixture<CustomWebApplicationFactory<Program>>
 {

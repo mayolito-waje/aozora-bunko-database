@@ -14,7 +14,7 @@ public class WrittenWork
   public string? ReleaseInfo { get; set; }
   public required string WritingStyleId { get; set; }
   public WritingStyle? WritingStyle { get; set; }
-  public bool WorkCopyright { get; set; } = false;
+  public bool WorkCopyright { get; set; }
   public required string AuthorId { get; set; }
   public Author? Author { get; set; }
   public required string WriterRoleId { get; set; }

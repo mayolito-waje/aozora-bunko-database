@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Server.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTables : Migration
+    public partial class UsePostgres : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,18 +14,18 @@ namespace Server.Data.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Surname = table.Column<string>(type: "TEXT", nullable: false),
-                    SurnameReading = table.Column<string>(type: "TEXT", nullable: false),
-                    SurnameSort = table.Column<string>(type: "TEXT", nullable: false),
-                    SurnameRomaji = table.Column<string>(type: "TEXT", nullable: false),
-                    GivenName = table.Column<string>(type: "TEXT", nullable: true),
-                    GivenNameReading = table.Column<string>(type: "TEXT", nullable: true),
-                    GivenNameSort = table.Column<string>(type: "TEXT", nullable: true),
-                    GivenNameRomaji = table.Column<string>(type: "TEXT", nullable: true),
-                    BirthDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
-                    DeathDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
-                    PersonalityRights = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Surname = table.Column<string>(type: "text", nullable: false),
+                    SurnameReading = table.Column<string>(type: "text", nullable: false),
+                    SurnameSort = table.Column<string>(type: "text", nullable: false),
+                    SurnameRomaji = table.Column<string>(type: "text", nullable: false),
+                    GivenName = table.Column<string>(type: "text", nullable: true),
+                    GivenNameReading = table.Column<string>(type: "text", nullable: true),
+                    GivenNameSort = table.Column<string>(type: "text", nullable: true),
+                    GivenNameRomaji = table.Column<string>(type: "text", nullable: true),
+                    BirthDate = table.Column<string>(type: "text", nullable: true),
+                    DeathDate = table.Column<string>(type: "text", nullable: true),
+                    PersonalityRights = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,8 +36,8 @@ namespace Server.Data.Migrations
                 name: "Publishers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,7 +48,7 @@ namespace Server.Data.Migrations
                 name: "WriterRoles",
                 columns: table => new
                 {
-                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                    Role = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,7 +59,7 @@ namespace Server.Data.Migrations
                 name: "WritingStyles",
                 columns: table => new
                 {
-                    Style = table.Column<string>(type: "TEXT", nullable: false)
+                    Style = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,11 +70,11 @@ namespace Server.Data.Migrations
                 name: "Sources",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    PublisherId = table.Column<string>(type: "TEXT", nullable: true),
-                    PublishDateInfo = table.Column<string>(type: "TEXT", nullable: true),
-                    OriginalSourceId = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    PublisherId = table.Column<string>(type: "text", nullable: true),
+                    PublishDateInfo = table.Column<string>(type: "text", nullable: true),
+                    OriginalSourceId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -96,22 +95,22 @@ namespace Server.Data.Migrations
                 name: "WrittenWorks",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    TitleReading = table.Column<string>(type: "TEXT", nullable: false),
-                    TitleSort = table.Column<string>(type: "TEXT", nullable: false),
-                    Subtitle = table.Column<string>(type: "TEXT", nullable: true),
-                    SubtitleReading = table.Column<string>(type: "TEXT", nullable: true),
-                    OriginalTitle = table.Column<string>(type: "TEXT", nullable: true),
-                    ReleaseInfo = table.Column<string>(type: "TEXT", nullable: true),
-                    WritingStyleId = table.Column<string>(type: "TEXT", nullable: false),
-                    WorkCopyright = table.Column<bool>(type: "INTEGER", nullable: false),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: false),
-                    WriterRoleId = table.Column<string>(type: "TEXT", nullable: false),
-                    SourceId = table.Column<string>(type: "TEXT", nullable: true),
-                    Source2Id = table.Column<string>(type: "TEXT", nullable: true),
-                    TextLink = table.Column<string>(type: "TEXT", nullable: false),
-                    HTMLLink = table.Column<string>(type: "TEXT", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    TitleReading = table.Column<string>(type: "text", nullable: false),
+                    TitleSort = table.Column<string>(type: "text", nullable: false),
+                    Subtitle = table.Column<string>(type: "text", nullable: true),
+                    SubtitleReading = table.Column<string>(type: "text", nullable: true),
+                    OriginalTitle = table.Column<string>(type: "text", nullable: true),
+                    ReleaseInfo = table.Column<string>(type: "text", nullable: true),
+                    WritingStyleId = table.Column<string>(type: "text", nullable: false),
+                    WorkCopyright = table.Column<bool>(type: "boolean", nullable: false),
+                    AuthorId = table.Column<string>(type: "text", nullable: false),
+                    WriterRoleId = table.Column<string>(type: "text", nullable: false),
+                    SourceId = table.Column<string>(type: "text", nullable: true),
+                    Source2Id = table.Column<string>(type: "text", nullable: true),
+                    TextLink = table.Column<string>(type: "text", nullable: false),
+                    HTMLLink = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using Server.Data;
 using Server.Services;
 
@@ -12,11 +12,11 @@ namespace AozoraBunkoDatabase.Tests;
 public class CustomWebApplicationFactory<TProgram>
   : WebApplicationFactory<TProgram> where TProgram : class
 {
-  private readonly SqliteConnection _connection;
+  private readonly NpgsqlConnection _connection;
 
   public CustomWebApplicationFactory()
   {
-    _connection = new SqliteConnection("DataSource=:memory:");
+    _connection = new NpgsqlConnection("Host=localhost;Database=aozora_test;Username=postgres;Password=postgres");
     _connection.Open();
   }
 
@@ -32,7 +32,7 @@ public class CustomWebApplicationFactory<TProgram>
 
       services.AddDbContext<AppDbContext>((options) =>
       {
-        options.UseSqlite(_connection);
+        options.UseNpgsql(_connection);
       });
 
       services.AddScoped<AozoraDatabaseService>();

@@ -43,14 +43,10 @@ public static class DbSeed
   {
     await dbContext.Database.MigrateAsync();
 
-    dbContext.Sources.RemoveRange(dbContext.Sources);
-    dbContext.Publishers.RemoveRange(dbContext.Publishers);
-    dbContext.WriterRoles.RemoveRange(dbContext.WriterRoles);
-    dbContext.WritingStyles.RemoveRange(dbContext.WritingStyles);
-    dbContext.WrittenWorks.RemoveRange(dbContext.WrittenWorks);
-    dbContext.Authors.RemoveRange(dbContext.Authors);
+    await dbContext.Database.ExecuteSqlRawAsync(
+      "TRUNCATE TABLE \"Sources\", \"Publishers\", \"WriterRoles\", \"WritingStyles\", \"WrittenWorks\", \"Authors\" RESTART IDENTITY CASCADE;"
+    );
 
-    await dbContext.SaveChangesAsync();
     await InitializeDb(dbContext, aozoraDatabaseService);
   }
 }
