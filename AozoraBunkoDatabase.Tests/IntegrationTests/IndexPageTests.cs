@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace AozoraBunkoDatabase.Tests.Integration;
+namespace AozoraBunkoDatabase.Tests.IntegrationTests;
 
 public class IndexPageTests :
     IClassFixture<CustomWebApplicationFactory<Program>>

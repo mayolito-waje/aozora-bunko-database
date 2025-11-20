@@ -4,7 +4,7 @@ using AozoraBunkoDatabase.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 
-namespace AozoraBunkoDatabase.Tests.Integration;
+namespace AozoraBunkoDatabase.Tests.IntegrationTests;
 
 public class WrittenWorksControllerTests
     : IClassFixture<CustomWebApplicationFactory<Program>>

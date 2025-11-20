@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.IO.Compression;
+using System.Text;
 using CsvHelper;
 using Microsoft.EntityFrameworkCore;
 using Server.Core.Aozora;
@@ -10,19 +12,24 @@ namespace Server.Services;
 
 public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseService
 {
-  // private async Task UseDbContext(Func<AppDbContext, Task> action)
-  // {
-  //   using var scope = scopeFactory.CreateScope();
-  //   var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-  //   await action(dbContext);
-  // }
-
   public async Task PopulateAozoraDatabase(string csvPath)
   {
     using var reader = new StreamReader(csvPath);
     using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
+    await StartPopulation(csv);
+  }
+
+  public async Task PopulateAozoraDatabase(ZipArchiveEntry archive)
+  {
+    using var reader = new StreamReader(archive.Open());
+    using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
+    await StartPopulation(csv);
+  }
+
+  private async Task StartPopulation(CsvReader csv)
+  {
     csv.Context.RegisterClassMap<AozoraMap>();
     foreach (var record in csv.GetRecords<Aozora>())
       if (await AddRow(record))

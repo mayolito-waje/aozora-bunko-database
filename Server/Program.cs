@@ -33,6 +33,7 @@ builder.Services.AddScoped<IWrittenWorksContext, WrittenWorksContext>();
 builder.Services.AddScoped<IAuthorsContext, AuthorsContext>();
 builder.Services.AddScoped<IPublishersContext, PublishersContext>();
 builder.Services.AddScoped<IAozoraDatabaseService, AozoraDatabaseService>();
+builder.Services.AddHttpClient<ISourceDataHandler, SourceDataHandler>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
