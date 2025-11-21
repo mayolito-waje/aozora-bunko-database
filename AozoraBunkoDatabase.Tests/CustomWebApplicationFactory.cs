@@ -37,7 +37,7 @@ public class CustomWebApplicationFactory<TProgram>
 
       services.AddScoped<AozoraDatabaseService>();
 
-      builder.UseEnvironment("Development");
+      builder.UseEnvironment("Testing");
     });
   }
 

@@ -1,3 +1,6 @@
+using Hangfire;
+using Hangfire.Common;
+using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Server.Contexts;
 using Server.Data;
@@ -33,7 +36,21 @@ builder.Services.AddScoped<IWrittenWorksContext, WrittenWorksContext>();
 builder.Services.AddScoped<IAuthorsContext, AuthorsContext>();
 builder.Services.AddScoped<IPublishersContext, PublishersContext>();
 builder.Services.AddScoped<IAozoraDatabaseService, AozoraDatabaseService>();
-builder.Services.AddHttpClient<ISourceDataHandler, SourceDataHandler>();
+
+builder.Services.AddHttpClient<ISourceDataHandler, SourceDataHandler>(client =>
+{
+  client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
+})
+    .ConfigurePrimaryHttpMessageHandler(() =>
+        new HttpClientHandler
+        {
+          AllowAutoRedirect = true,
+          MaxAutomaticRedirections = 10,
+        });
+
+builder.Services.AddHangfire(x =>
+    x.UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))));
+builder.Services.AddHangfireServer();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
@@ -51,6 +68,14 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
   );
+
+var recurringJobs = app.Services.GetRequiredService<IRecurringJobManager>();
+
+recurringJobs.AddOrUpdate(
+  "update-aozora-database",
+  Job.FromExpression<ISourceDataHandler>(s => s.StartDatabaseJob()),
+  Cron.Weekly()
+);
 
 app.Run();
 

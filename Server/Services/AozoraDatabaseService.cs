@@ -9,7 +9,7 @@ using Server.Models;
 
 namespace Server.Services;
 
-public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseService
+public class AozoraDatabaseService(AppDbContext dbContext, ILogger<AozoraDatabaseService> logger) : IAozoraDatabaseService
 {
   public async Task PopulateAozoraDatabase(string csvPath)
   {
@@ -30,14 +30,16 @@ public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseServ
   private async Task StartPopulation(CsvReader csv)
   {
     csv.Context.RegisterClassMap<AozoraMap>();
+
+    logger.LogInformation($"Starting DB update on {DateTime.Now}");
+
     foreach (var record in csv.GetRecords<Aozora>())
-      if (await AddRow(record))
-        Console.WriteLine($"Added new row with ID {record.WrittenWorkId}.");
-      else
-        Console.WriteLine($"Row with ID {record.WrittenWorkId} already exists");
+      await AddRow(record);
+
+    logger.LogInformation($"Finished DB update on {DateTime.Now}");
   }
 
-  private async Task<bool> AddRow(Aozora data)
+  private async Task AddRow(Aozora data)
   {
     var author = await dbContext.Authors.FindAsync(data.AuthorId);
     author ??= await AddAuthor(data);
@@ -69,14 +71,10 @@ public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseServ
     writingStyle ??= await AddWritingStyle(data.WritingStyle);
 
     var writtenWork = await dbContext.WrittenWorks.FindAsync(data.WrittenWorkId);
-    if (writtenWork != null)
-    {
-      return false;
-    }
-    else
+    if (writtenWork == null)
     {
       await AddWrittenWork(data, author, source1, source2, writerRole, writingStyle);
-      return true;
+      logger.LogInformation($"Added new written work: ID {data.WrittenWorkId}");
     }
   }
 
@@ -100,6 +98,8 @@ public class AozoraDatabaseService(AppDbContext dbContext) : IAozoraDatabaseServ
 
     dbContext.Authors.Add(newAuthor);
     await dbContext.SaveChangesAsync();
+
+    logger.LogInformation($"Added new author: ID {newAuthor.Id}");
 
     return newAuthor;
   }
