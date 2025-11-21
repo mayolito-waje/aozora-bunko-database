@@ -42,6 +42,10 @@ jobs:
       - name: create test db
         run: |
           psql "postgresql://postgres:postgres@localhost:5432/postgres" -c "CREATE DATABASE aozora_test;"
+      
+      - name: create hangfire db
+        run: |
+          psql "postgresql://postgres:postgres@localhost:5432/postgres" -c "CREATE DATABASE hangfire;"
 
       - name: Build
         run: dotnet build --no-restore
