@@ -9,6 +9,7 @@ on:
   pull_request:
     branches: ["main"]
 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,16 +37,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
-
-      - name: create test db
-        run: |
-          psql "postgresql://postgres:postgres@localhost:5432/postgres" -c "CREATE DATABASE aozora_test;"
-      
-      - name: create hangfire db
-        run: |
-          psql "postgresql://postgres:postgres@localhost:5432/postgres" -c "CREATE DATABASE hangfire;"
+      - name: Set environment to Testing (prevents Hangfire from running)
+        run: echo "ASPNETCORE_ENVIRONMENT=Testing" >> $GITHUB_ENV
 
       - name: Build
         run: dotnet build --no-restore

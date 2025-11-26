@@ -1,30 +1,15 @@
-using System;
 using System.Net;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace AozoraBunkoDatabase.Tests.IntegrationTests;
 
-[Collection("Sequential")]
-public class IndexPageTests :
-    IClassFixture<CustomWebApplicationFactory<Program>>
+public class IndexPageTests : BaseIntegrationTest
 {
-  private readonly HttpClient _client;
-  private readonly CustomWebApplicationFactory<Program> _factory;
-
-  public IndexPageTests(
-    CustomWebApplicationFactory<Program> factory)
-  {
-    _factory = factory;
-    _client = factory.CreateClient(new WebApplicationFactoryClientOptions
-    {
-      AllowAutoRedirect = false
-    });
-  }
+  public IndexPageTests(FactoryFixture factory) : base(factory) { }
 
   [Fact]
   public async Task Get_RootReturns200()
   {
-    var response = await _client.GetAsync("/");
+    var response = await Client.GetAsync("/");
 
     Assert.Equal(HttpStatusCode.OK, response.StatusCode);
   }
@@ -34,7 +19,7 @@ public class IndexPageTests :
   {
     string welcomeMessage = "青空文庫へようこそ (Welcome to Aozora Bunko)!";
 
-    var response = await _client.GetAsync("/");
+    var response = await Client.GetAsync("/");
     var responseMessage = await response.Content.ReadAsStringAsync();
 
     Assert.Contains(welcomeMessage, responseMessage);

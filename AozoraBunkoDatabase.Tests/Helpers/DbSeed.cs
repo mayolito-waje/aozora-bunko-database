@@ -38,15 +38,4 @@ public static class DbSeed
     await aozoraDatabaseService.PopulateAozoraDatabase(archive.Entries[0]);
     await dbContext.SaveChangesAsync();
   }
-
-  public static async Task ReinitializeDb(AppDbContext dbContext, AozoraDatabaseService aozoraDatabaseService)
-  {
-    await dbContext.Database.MigrateAsync();
-
-    await dbContext.Database.ExecuteSqlRawAsync(
-      "TRUNCATE TABLE \"Sources\", \"Publishers\", \"WriterRoles\", \"WritingStyles\", \"WrittenWorks\", \"Authors\" RESTART IDENTITY CASCADE;"
-    );
-
-    await InitializeDb(dbContext, aozoraDatabaseService);
-  }
 }

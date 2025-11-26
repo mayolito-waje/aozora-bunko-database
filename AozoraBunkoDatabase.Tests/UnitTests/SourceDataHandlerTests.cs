@@ -1,4 +1,3 @@
-using System;
 using System.IO.Compression;
 using AozoraBunkoDatabase.Tests.Helpers;
 using Moq;

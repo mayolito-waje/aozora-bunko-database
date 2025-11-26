@@ -1,7 +1,5 @@
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
-using Server.Data;
-using Server.Interfaces;
 
 namespace Server.Controllers
 {

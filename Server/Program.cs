@@ -48,20 +48,14 @@ builder.Services.AddHttpClient<ISourceDataHandler, SourceDataHandler>(client =>
           MaxAutomaticRedirections = 10,
         });
 
-builder.Services.AddHangfire(x =>
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+  builder.Services.AddHangfire(x =>
     x.UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))));
-builder.Services.AddHangfireServer();
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+  builder.Services.AddHangfireServer();
+}
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapOpenApi();
-// }
 
 app.UseCors(allowClient);
 app.MapControllerRoute(
@@ -69,13 +63,16 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}"
   );
 
-var recurringJobs = app.Services.GetRequiredService<IRecurringJobManager>();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+  var recurringJobs = app.Services.GetRequiredService<IRecurringJobManager>();
 
-recurringJobs.AddOrUpdate(
-  "update-aozora-database",
-  Job.FromExpression<ISourceDataHandler>(s => s.StartDatabaseJob()),
-  Cron.Weekly()
-);
+  recurringJobs.AddOrUpdate(
+    "update-aozora-database",
+    Job.FromExpression<ISourceDataHandler>(s => s.StartDatabaseJob()),
+    Cron.Weekly()
+  );
+}
 
 app.Run();
 
