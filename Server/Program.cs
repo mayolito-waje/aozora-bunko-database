@@ -1,6 +1,7 @@
 using Hangfire;
 using Hangfire.Common;
 using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Server.Contexts;
 using Server.Data;
@@ -11,7 +12,6 @@ var allowClient = "_allowClient";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers()
   .AddNewtonsoftJson(options =>
   {
@@ -32,6 +32,13 @@ builder.Services.AddCors(options =>
                     });
 });
 
+// Need to setup default authentication scheme to download from aozora bunko
+builder.Services.AddAuthentication(opt =>
+{
+  opt.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+  opt.DefaultForbidScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
 builder.Services.AddScoped<IWrittenWorksContext, WrittenWorksContext>();
 builder.Services.AddScoped<IAuthorsContext, AuthorsContext>();
 builder.Services.AddScoped<IPublishersContext, PublishersContext>();
@@ -46,12 +53,13 @@ builder.Services.AddHttpClient<ISourceDataHandler, SourceDataHandler>(client =>
         {
           AllowAutoRedirect = true,
           MaxAutomaticRedirections = 10,
+          UseDefaultCredentials = true,
         });
 
-if (!builder.Environment.IsEnvironment("Testing"))
+if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
 {
   builder.Services.AddHangfire(x =>
-    x.UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))));
+  x.UsePostgreSqlStorage(opt => opt.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))));
   builder.Services.AddHangfireServer();
 }
 
@@ -63,8 +71,24 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}"
   );
 
-if (!app.Environment.IsEnvironment("Testing"))
+app.UseAuthentication();
+app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
 {
+  using (var context = scope.ServiceProvider.GetRequiredService<AppDbContext>())
+  {
+    if (context.Database.GetPendingMigrations().Any())
+    {
+      context.Database.Migrate();
+    }
+  }
+}
+
+if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
+{
+  app.UseHangfireDashboard();
+
   var recurringJobs = app.Services.GetRequiredService<IRecurringJobManager>();
 
   recurringJobs.AddOrUpdate(

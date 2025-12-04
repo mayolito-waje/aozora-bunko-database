@@ -1,0 +1,73 @@
+services:
+  app:
+    container_name: aozora_api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:80"
+      - "5001:443"
+    environment:
+      - ASPNETCORE_URLS=https://+:443;http://+:80;
+      - ASPNETCORE_HTTPS_PORTS=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${KESTREL_CERT_PASSWORD}
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ConnectionStrings__DefaultConnection=Host=aozoradb;Port=5432;Database=aozora;Username=postgres;Password=postgres
+      - ConnectionStrings__HangfireConnection=Host=hangfiredb;Port=5432;Database=hangfire;Username=postgres;Password=postgres
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      aozoradb:
+        condition: service_healthy
+      hangfiredb:
+        condition: service_healthy
+    networks:
+      - aozora-network
+
+  aozoradb:
+    image: postgres:16.11
+    container_name: aozoradb
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aozora
+    ports:
+      - "5433:5432"
+    volumes:
+      - aozora_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aozora-network
+
+  hangfiredb:
+    image: postgres:16.11
+    container_name: hangfiredb
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: hangfire
+    ports:
+      - "5434:5432"
+    volumes:
+      - hangfire_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aozora-network
+
+volumes:
+  aozora_db_data:
+  hangfire_db_data:
+
+networks:
+  aozora-network:
+    driver: bridge
