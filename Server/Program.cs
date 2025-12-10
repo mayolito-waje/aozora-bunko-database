@@ -63,6 +63,11 @@ if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
   builder.Services.AddHangfireServer();
 }
 
+builder.Services.AddOpenApi(options =>
+{
+  options.ShouldInclude = operation => operation.HttpMethod != null;
+});
+
 var app = builder.Build();
 
 app.UseCors(allowClient);
@@ -96,6 +101,16 @@ if (builder.Environment.IsDevelopment() || builder.Environment.IsProduction())
     Job.FromExpression<ISourceDataHandler>(s => s.StartDatabaseJob()),
     Cron.Weekly()
   );
+}
+
+if (builder.Environment.IsDevelopment())
+{
+  app.MapOpenApi();
+
+  app.UseSwaggerUI(options =>
+  {
+    options.SwaggerEndpoint("/openapi/v1.json", "v1");
+  });
 }
 
 app.Run();

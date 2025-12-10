@@ -13,6 +13,7 @@ namespace Server.Controllers
       _publishersDb = publishersDb;
     }
 
+    [EndpointDescription("Retrieve publishers")]
     [HttpGet]
     public async Task<IActionResult> RetrievePublishers(int? page, int? pageSize)
     {
@@ -21,6 +22,7 @@ namespace Server.Controllers
       return Ok(publishers.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Retrieve publishers by ID")]
     [HttpGet("{id}")]
     public async Task<IActionResult> RetrievePublisherById(string id, int? sourcePage, int? sourcePageSize)
     {

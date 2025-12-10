@@ -13,6 +13,7 @@ namespace Server.Controllers
       _authorsDb = authorsDb;
     }
 
+    [EndpointDescription("Get all authors, allow filtering by name")]
     [HttpGet]
     public async Task<ActionResult> GetAllAuthors([FromQuery(Name = "s")] string? search, int? page, int? pageSize)
     {
@@ -20,6 +21,7 @@ namespace Server.Controllers
       return Ok(allAuthors?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Get author by their ID using ID query parameter")]
     [HttpGet("{id}")]
     public async Task<ActionResult> GetAuthorById(string id)
     {

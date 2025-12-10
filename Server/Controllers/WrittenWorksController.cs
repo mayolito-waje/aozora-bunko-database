@@ -14,6 +14,7 @@ namespace Server.Controllers
       _writtenWorksDb = writtenWorksDb;
     }
 
+    [EndpointDescription("Retrieve written works that allow filtering by search query (s) and author ID (authorId)")]
     [HttpGet]
     public async Task<IActionResult> RetrieveWorks([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
@@ -22,6 +23,7 @@ namespace Server.Controllers
       return Ok(works.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Retrieve written work by their corresponding ID")]
     [HttpGet("{id}")]
     public async Task<IActionResult> RetrieveWorkById(string id)
     {
@@ -32,6 +34,7 @@ namespace Server.Controllers
       return Ok(work);
     }
 
+    [EndpointDescription("Retrieve written works that is formatted in 新字新仮名 format")]
     [HttpGet("shinji_shinkana")]
     public async Task<IActionResult> ShinjiShinkanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
@@ -39,6 +42,7 @@ namespace Server.Controllers
       return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Retrieve written works that is formatted in 旧字旧仮名 format")]
     [HttpGet("kyuuji_kyuukana")]
     public async Task<IActionResult> KyuujiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
@@ -46,6 +50,7 @@ namespace Server.Controllers
       return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Retrieve written works that is formatted in 新字旧仮名 format")]
     [HttpGet("shinji_kyuukana")]
     public async Task<IActionResult> ShinjiKyuukanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
@@ -53,6 +58,7 @@ namespace Server.Controllers
       return Ok(works?.ToPagedList(page ?? 1, pageSize ?? 25));
     }
 
+    [EndpointDescription("Retrieve written works that is formatted in non-kana format (e.g. Latin alphabet)")]
     [HttpGet("non_kana")]
     public async Task<IActionResult> NonKanaList([FromQuery(Name = "s")] string? search, string? authorId, int? page, int? pageSize)
     {
